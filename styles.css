@@ -1,0 +1,720 @@
+/* --- CSS Variables --- */
+:root {
+    --primary-color: #C0392B; /* Deep Red */
+    --primary-dark: #A93226;
+    --primary-light: #E74C3C;
+    --secondary-color: #E67E22; /* Warm Orange */
+    --accent-color: #F39C12; /* Gold Accent */
+    --background-color: #FDFEFE; /* Very Light Gray/Off-white */
+    --card-background: #FFFFFF;
+    --text-dark: #2C3E50; /* Dark Blue/Gray */
+    --text-medium: #566573;
+    --text-light: #85929E;
+    --border-color: #EAEDED;
+    --shadow-light: rgba(44, 62, 80, 0.08);
+    --shadow-medium: rgba(44, 62, 80, 0.12);
+    --success-color: #27AE60;
+    --error-color: #C0392B; /* Match primary */
+    --error-background: #FADBD8;
+    --font-primary: 'Poppins', sans-serif;
+    --font-heading: 'Playfair Display', serif; /* Serif for headings */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --transition-speed: 0.3s;
+    --container-width: 1180px;
+}
+
+/* --- Base Styles --- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-medium); /* Default to medium text */
+    font-family: var(--font-primary);
+    line-height: 1.7;
+    font-weight: 400;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 25px;
+}
+
+/* --- Typography & Headings --- */
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--text-dark);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.75em;
+}
+h1 { font-size: 2.8rem; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.5rem; }
+
+.subtitle {
+    font-size: 1.15rem;
+    color: var(--text-medium);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-heading {
+    text-align: center;
+    margin-bottom: 40px; /* Space below section titles */
+    position: relative;
+    padding-bottom: 15px;
+}
+/* Optional: underline effect for section headings */
+.section-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* --- Header --- */
+.site-header {
+    background-color: var(--card-background);
+    padding: 15px 0;
+    box-shadow: 0 2px 15px var(--shadow-light);
+    position: sticky; /* Make header sticky */
+    top: 0;
+    z-index: 1000;
+    transition: background-color var(--transition-speed) ease;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--primary-dark);
+}
+
+.logo-icon {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    transition: transform var(--transition-speed) ease;
+}
+.logo:hover .logo-icon {
+    transform: rotate(-10deg) scale(1.1);
+}
+
+.logo-text {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.logo-text sup {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-left: 2px;
+    position: relative;
+    top: -5px;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: var(--text-medium);
+    font-weight: 500;
+    padding: 8px 5px;
+    position: relative;
+    transition: color var(--transition-speed) ease;
+}
+
+.main-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: width var(--transition-speed) ease;
+}
+
+.main-nav a:hover,
+.main-nav a.active { /* Add 'active' class via JS if needed */
+    color: var(--primary-color);
+}
+.main-nav a:hover::after,
+.main-nav a.active::after {
+    width: 100%;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    background: linear-gradient(135deg, rgba(253, 254, 254, 0.8), rgba(248, 249, 249, 0.9)), url('https://images.unsplash.com/photo-1551028150-64b9f398f678?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover; /* Example subtle background */
+    padding: 80px 0;
+    text-align: center;
+    color: var(--text-dark);
+    margin-bottom: 60px;
+}
+
+.hero-content h1 {
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+}
+
+.hero-content .subtitle {
+    margin-bottom: 35px;
+    color: var(--text-dark); /* Darker text on light bg */
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 14px 30px;
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 5px 15px rgba(192, 57, 43, 0.3);
+    transition: all var(--transition-speed) ease;
+}
+.cta-button i { margin-left: 8px; }
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(192, 57, 43, 0.4);
+}
+
+/* --- Main Content & Calculator --- */
+.main-content {
+    padding-top: 20px; /* Space below hero/header */
+}
+
+.calculator-section {
+    margin-bottom: 60px;
+}
+
+.calculator-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start; /* Align cards to the top */
+}
+
+.card {
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    padding: 35px 40px;
+    box-shadow: 0 10px 30px var(--shadow-light);
+    border: 1px solid var(--border-color);
+    transition: box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+/* Subtle lift on hover for cards */
+.card:hover {
+     /* transform: translateY(-4px); */
+     /* box-shadow: 0 15px 35px var(--shadow-medium); */
+}
+
+
+.card-title {
+    margin-bottom: 30px;
+    color: var(--text-dark);
+    font-size: 1.3rem;
+    font-weight: 700; /* Poppins bold */
+    font-family: var(--font-primary); /* Use primary font for card titles */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.card-icon {
+    color: var(--primary-color);
+    font-size: 1.4rem;
+    width: 25px;
+    text-align: center;
+}
+
+/* --- Form Elements --- */
+.input-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: var(--text-medium);
+    font-size: 0.95rem;
+}
+label i {
+    width: 16px;
+    text-align: center;
+    color: var(--primary-color); /* Use primary for icons */
+    opacity: 0.8;
+}
+
+/* Select Wrapper for Custom Arrow */
+.select-wrapper {
+    position: relative;
+}
+.select-wrapper::after {
+    content: '\f078'; /* Font Awesome Angle Down */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    pointer-events: none; /* Allow click through to select */
+    transition: color var(--transition-speed) ease;
+}
+select:focus + .select-wrapper::after { /* This won't work directly, style wrapper on select focus via JS if needed or simplify */
+     /* color: var(--primary-color); */
+}
+
+
+select, input[type="number"] {
+    width: 100%;
+    padding: 14px 40px 14px 18px; /* Adjust padding for arrow */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
+    font-family: var(--font-primary);
+    color: var(--text-dark);
+    background-color: #fff;
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    appearance: none; /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+/* Input doesn't need the extra right padding */
+input[type="number"] {
+    padding: 14px 18px;
+}
+
+
+select:focus, input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+input::placeholder {
+    color: var(--text-light);
+    opacity: 0.9;
+}
+
+/* Hide spinner buttons */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+/* --- Validation Styles --- */
+.error-message {
+    display: block;
+    color: var(--error-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 6px;
+    min-height: 1.2em;
+    opacity: 0; /* Hidden by default */
+    transition: opacity var(--transition-speed) ease;
+}
+input.input-error + .error-message,
+select.input-error + .error-message { /* Adjust if select wrapper interferes */
+    opacity: 1;
+}
+
+input.input-error, select.input-error {
+    border-color: var(--error-color);
+    background-color: var(--error-background);
+}
+input.input-error:focus, select.input-error:focus {
+     box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+/* --- Button --- */
+.button { /* General button styles */
+    border: none;
+    padding: 14px 25px;
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    display: inline-flex; /* Use flex for icon alignment */
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none; /* For potential <a> buttons */
+}
+
+.primary-button {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    width: 100%; /* Make form button full width */
+    margin-top: 15px;
+    box-shadow: 0 4px 15px rgba(192, 57, 43, 0.25);
+}
+.primary-button:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(192, 57, 43, 0.35);
+}
+.primary-button:active:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(192, 57, 43, 0.3);
+}
+.primary-button:disabled {
+    background: var(--text-light);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+    opacity: 0.7;
+}
+.primary-button .fa-spinner { /* Spinner animation */
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+
+/* --- Results Card --- */
+.results-wrapper {
+    min-height: 200px; /* Give it some initial height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity var(--transition-speed) ease;
+}
+
+.placeholder-result {
+    text-align: center;
+    color: var(--text-light);
+    padding: 20px;
+}
+.placeholder-result i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: block;
+    opacity: 0.6;
+}
+
+.result-list {
+    list-style: none;
+    width: 100%; /* Take full width when visible */
+    opacity: 0; /* Fade in */
+    transition: opacity 0.5s ease 0.1s; /* Delay fade-in slightly */
+}
+.result-list.visible {
+    opacity: 1;
+}
+
+.result-item {
+    padding: 16px 5px;
+    border-bottom: 1px dashed var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+.result-item:last-child { border-bottom: none; }
+
+.result-label {
+    font-weight: 500;
+    color: var(--text-medium);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+.result-label i {
+    width: 20px;
+    text-align: center;
+    color: var(--secondary-color);
+    font-size: 1.15em;
+}
+/* Highlight the main result */
+.result-item:first-child .result-label {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+.result-item:first-child .result-value {
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+}
+
+
+.result-value {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1.05rem;
+    text-align: right;
+}
+
+/* --- Recipe Suggestions --- */
+.recipe-suggestions {
+    margin-top: 60px; /* More space above recipes */
+    padding-top: 30px; /* Space after heading */
+    margin-bottom: 60px;
+}
+
+.suggestion-cards-container {
+    position: relative;
+    min-height: 200px; /* Prevent collapsing before load */
+}
+
+.suggestion-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Slightly wider cards */
+    gap: 30px;
+    opacity: 0; /* Fade in */
+    transition: opacity 0.5s ease;
+}
+.suggestion-cards.visible {
+    opacity: 1;
+}
+
+/* General placeholder style */
+.placeholder-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    text-align: center;
+    color: var(--text-light);
+    padding: 30px;
+    font-style: italic;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius-md);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+.placeholder-message.hidden { display: none; } /* Hide specific placeholder */
+
+
+.suggestion-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: all var(--transition-speed) ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px var(--shadow-light);
+    text-decoration: none; /* If card is a link */
+    cursor: pointer;
+}
+
+.suggestion-card:hover,
+.suggestion-card:focus {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px var(--shadow-medium);
+    border-color: var(--secondary-color);
+    outline: none;
+}
+
+.suggestion-img-container {
+    height: 180px;
+    background-color: var(--border-color); /* Placeholder bg */
+    overflow: hidden; /* Ensure image fits */
+    position: relative;
+    display: flex; /* Center icon fallback */
+    align-items: center;
+    justify-content: center;
+}
+.suggestion-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the area */
+    transition: transform 0.4s ease;
+}
+/* Zoom effect on hover */
+.suggestion-card:hover .suggestion-img-container img {
+    transform: scale(1.05);
+}
+/* Icon fallback if image fails or isn't loaded */
+.suggestion-img-container i {
+    font-size: 4rem;
+    color: var(--text-light);
+    opacity: 0.5;
+}
+
+.suggestion-content {
+    padding: 20px 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.suggestion-name {
+    font-weight: 600;
+    font-family: var(--font-heading); /* Use heading font */
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.suggestion-desc {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    line-height: 1.6;
+    margin-bottom: 15px;
+    flex-grow: 1; /* Allow desc to take up space */
+}
+
+.suggestion-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+.tag {
+    background-color: var(--border-color);
+    color: var(--text-medium);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 15px; /* Pill shape */
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.tag i { font-size: 0.8em; opacity: 0.8; }
+.tag.difficulty-easy { background-color: #E8F8F5; color: #1ABC9C; }
+.tag.difficulty-medium { background-color: #FEF9E7; color: #F39C12; }
+.tag.difficulty-hard { background-color: #FADBD8; color: #C0392B; }
+
+
+.suggestion-action {
+    margin-top: auto; /* Push to bottom */
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+}
+
+.view-recipe-link {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+}
+.view-recipe-link i { margin-left: 5px; }
+.view-recipe-link:hover {
+    color: var(--primary-dark);
+}
+
+
+/* --- Footer --- */
+.site-footer {
+    margin-top: 80px;
+    background-color: var(--text-dark);
+    color: var(--text-light);
+    padding: 40px 0;
+    font-size: 0.9rem;
+}
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--background-color);
+}
+.footer-logo .logo-icon { color: var(--secondary-color); font-size: 1.6rem; }
+.footer-logo .logo-text { font-size: 1.3rem; color: var(--background-color); }
+.footer-logo .logo-text sup { color: var(--accent-color); }
+
+.footer-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color var(--transition-speed) ease;
+}
+.footer-links a:hover {
+    color: var(--background-color);
+}
+.footer-copyright {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--text-medium);
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+
+/* --- Utility --- */
+.hidden { display: none !important; } /* Ensure it overrides display properties */
+
+/* --- Responsive Design --- */
+@media (max-width: 992px) {
+    .calculator-container { grid-template-columns: 1fr; }
+    .hero-section { padding: 60px 0; }
+    h1 { font-size: 2.4rem; }
+    h2 { font-size: 1.9rem; }
+    .main-nav ul { display: none; } /* Hide nav links for simplicity, add mobile menu toggle later */
+    .suggestion-cards { grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+}
+
+@media (max-width: 768px) {
+    html { font-size: 15px; }
+    .container { padding: 0 20px; }
+    .hero-section { margin-bottom: 40px; }
+    .card { padding: 30px; }
+    .suggestion-cards { gap: 20px; }
+    .footer-content { flex-direction: column; text-align: center; }
+    .footer-links { margin: 15px 0; }
+}
+
+@media (max-width: 576px) {
+    html { font-size: 14px; }
+    .hero-section { padding: 40px 0; }
+    h1 { font-size: 2rem; }
+    .subtitle { font-size: 1rem; }
+    .card { padding: 25px 20px; }
+    .result-item { flex-direction: column; align-items: flex-start; gap: 5px; }
+    .result-value { text-align: left; }
+    .suggestion-cards { grid-template-columns: 1fr; } /* Stack cards */
+    .suggestion-img-container { height: 160px; }
+}
