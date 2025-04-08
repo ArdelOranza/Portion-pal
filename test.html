@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test - test</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* --- CSS Variables --- */
+    :root {
+      --primary-color: #E67E22; /* A warm, inviting orange */
+      --primary-dark: #D35400;
+      --secondary-color: #F39C12; /* A secondary accent */
+      --background-color: #FDF8F2; /* A very light beige/off-white */
+      --card-background: #FFFFFF;
+      --text-dark: #4A3F35; /* Dark brown for text */
+      --text-medium: #7B6D61;
+      --text-light: #A89C91;
+      --border-color: #EAE0D5;
+      --shadow-color: rgba(74, 63, 53, 0.1);
+      --success-color: #2ECC71;
+      --font-family: 'Poppins', sans-serif;
+      --border-radius-sm: 8px;
+      --border-radius-md: 12px;
+      --border-radius-lg: 16px;
+    }
+
+    /* --- Base Styles --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-dark);
+      font-family: var(--font-family);
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px; /* Horizontal padding only */
+    }
+
+    /* --- Header --- */
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      padding: 25px 0;
+      border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+      box-shadow: 0 6px 20px var(--shadow-color);
+      margin-bottom: 40px; /* Space below header */
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Or center if no other elements */
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo h1 {
+      font-size: 2rem; /* Slightly larger */
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-icon {
+      font-size: 2.2rem; /* Use FontAwesome icon */
+      transform: rotate(-10deg); /* Fun tilt */
+    }
+
+    /* --- Main Content & Layout --- */
+    main {
+      padding: 0 20px; /* Horizontal padding */
+    }
+
+    .calculator-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px; /* Increased gap */
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 900px) { /* Adjust breakpoint */
+      .calculator-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* --- Cards --- */
+    .calculator-card, .result-card, .recipe-suggestions {
+      background: var(--card-background);
+      border-radius: var(--border-radius-lg);
+      padding: 30px 35px; /* Increased padding */
+      box-shadow: 0 8px 25px var(--shadow-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .calculator-card:hover, .result-card:hover, .recipe-suggestions:hover {
+       /* Subtle lift on hover */
+      /* transform: translateY(-4px); */
+      /* box-shadow: 0 12px 30px rgba(74, 63, 53, 0.15); */
+    }
+
+    .card-title, .result-title, .suggestion-title {
+      margin-bottom: 25px;
+      color: var(--text-dark);
+      font-size: 1.4rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 15px;
+    }
+
+    .card-icon, .result-icon, .suggestion-icon {
+      color: var(--primary-color);
+      font-size: 1.6rem;
+      width: 30px; /* Ensure consistent icon alignment */
+      text-align: center;
+    }
+
+    /* --- Form Elements --- */
+    .input-group {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: var(--text-medium);
+      font-size: 0.95rem;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      font-size: 1rem;
+      font-family: var(--font-family);
+      color: var(--text-dark);
+      background-color: #fff; /* Ensure background contrasts */
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    select:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
+    }
+
+    /* Style placeholder text */
+    input::placeholder {
+      color: var(--text-light);
+      opacity: 0.8;
+    }
+
+    /* Hide spinner buttons on number inputs */
+     input[type=number]::-webkit-inner-spin-button,
+     input[type=number]::-webkit-outer-spin-button {
+       -webkit-appearance: none;
+       margin: 0;
+     }
+     input[type=number] {
+       -moz-appearance: textfield; /* Firefox */
+     }
+
+    /* --- Button --- */
+    button[type="submit"] {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: var(--border-radius-sm);
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 15px;
+      box-shadow: 0 4px 15px rgba(211, 84, 0, 0.3);
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button[type="submit"]:hover {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(211, 84, 0, 0.4);
+    }
+
+    button[type="submit"]:active {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(211, 84, 0, 0.3);
+    }
+
+    /* --- Results Card --- */
+    .result-list {
+      list-style: none;
+      padding-top: 10px; /* Space after title underline */
+    }
+
+    .result-item {
+      padding: 15px 0;
+      border-bottom: 1px dashed var(--border-color); /* Dashed divider */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-label {
+      font-weight: 500;
+      color: var(--text-medium);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0; /* Prevent label from shrinking too much */
+    }
+    .result-label i {
+        width: 18px;
+        text-align: center;
+        color: var(--secondary-color);
+    }
+
+    .result-value {
+      font-weight: 600;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+      text-align: right;
+    }
+
+    /* --- Recipe Suggestions --- */
+    .recipe-suggestions {
+      margin-top: 40px;
+    }
+
+    .suggestion-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Slightly larger min size */
+      gap: 25px;
+      padding-top: 10px; /* Space after title underline */
+    }
+
+    .suggestion-card {
+      background: var(--background-color); /* Light background for contrast */
+      border-radius: var(--border-radius-md);
+      padding: 0; /* Padding handled internally now */
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden; /* Clip content */
+      border: 1px solid var(--border-color);
+    }
+
+    .suggestion-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 20px var(--shadow-color);
+      border-color: var(--secondary-color);
+    }
+
+    .suggestion-img {
+      height: 160px;
+      width: 100%;
+      background: linear-gradient(135deg, var(--text-light), var(--text-medium)); /* Gradient placeholder */
+      border-radius: var(--border-radius-md) var(--border-radius-md) 0 0; /* Match card top corners */
+      margin-bottom: 0; /* Removed bottom margin */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 3rem; /* Larger icon */
+    }
+    .suggestion-img i {
+        opacity: 0.7;
+    }
+
+    .suggestion-content {
+        padding: 20px;
+    }
+
+    .suggestion-name {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+      font-size: 1.1rem;
+    }
+
+    .suggestion-info {
+      color: var(--text-medium);
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .suggestion-info span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .suggestion-info i {
+        color: var(--secondary-color);
+    }
+
+
+    /* --- Footer --- */
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      color: var(--text-light);
+      padding: 30px 20px;
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* --- Utility --- */
+    .hidden {
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <!-- Using Font Awesome Icon -->
+          <div class="logo-icon"><i class="fa-solid fa-drumstick-bite"></i></div>
+          <h1>test<h1>
+        </div>
+        <!-- Add Navigation or other elements here if needed -->
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="calculator-container">
+        <div class="calculator-card">
+          <h2 class="card-title">
+            <!-- Using Font Awesome Icon -->
+            <span class="card-icon"><i class="fa-solid fa-sliders"></i></span>
+            Input Meat Details
+          </h2>
+          <form id="meatForm">
+            <div class="input-group">
+              <label for="meatType"><i class="fa-solid fa-cow"></i> Meat Type</label>
+              <select id="meatType">
+                <option value="pork">Pork</option>
+                <option value="chicken">Chicken</option>
+                <option value="beef">Beef</option>
+                <option value="fish">Fish</option>
+                <option value="lamb">Lamb</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="meatWeight"><i class="fa-solid fa-weight-scale"></i> Weight (grams)</label>
+              <input type="number" id="meatWeight" placeholder="e.g., 1500" min="1" required>
+            </div>
+            <div class="input-group">
+              <label for="portionSize"><i class="fa-solid fa-user-group"></i> Desired Portion Size</label>
+              <select id="portionSize">
+                <option value="small">Small (~100g per person)</option>
+                <option value="medium" selected>Medium (~150g per person)</option>
+                <option value="large">Large (~200g per person)</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div class="input-group hidden" id="customPortionGroup">
+              <label for="customPortion"><i class="fa-solid fa-pen-ruler"></i> Custom Portion (grams per person)</label>
+              <input type="number" id="customPortion" placeholder="Enter custom grams" min="1">
+            </div>
+            <!-- Using Font Awesome Icon -->
+            <button type="submit" id="calculateBtn">
+              <i class="fa-solid fa-calculator"></i> Calculate Portions
+            </button>
+          </form>
+        </div>
+
+        <div class="result-card">
+          <h2 class="result-title">
+            <!-- Using Font Awesome Icon -->
+            <span class="result-icon"><i class="fa-solid fa-plate-wheat"></i></span>
+            Portion Results
+          </h2>
+          <ul class="result-list">
+            <li class="result-item">
+              <!-- Using Font Awesome Icons -->
+              <span class="result-label"><i class="fa-solid fa-users"></i> Total Servings</span>
+              <span class="result-value" id="totalServings">-</span>
+            </li>
+            <li class="result-item">
+              <span class="result-label"><i class="fa-solid fa-fire-burner"></i> Cooking Method</span>
+              <span class="result-value" id="cookingMethod">-</span>
+            </li>
+            <li class="result-item">
+              <span class="result-label"><i class="fa-solid fa-clock"></i> Cooking Time</span>
+              <span class="result-value" id="cookingTime">-</span>
+            </li>
+            <li class="result-item">
+              <span class="result-label"><i class="fa-solid fa-mortar-pestle"></i> Seasoning</span>
+              <span class="result-value" id="seasoning">-</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="recipe-suggestions" id="recipeSuggestions">
+        <h2 class="suggestion-title">
+          <!-- Using Font Awesome Icon -->
+          <span class="suggestion-icon"><i class="fa-solid fa-book-open"></i></span>
+          Recipe Suggestions
+        </h2>
+        <div class="suggestion-cards" id="suggestionCards">
+          <!-- Recipe suggestions will be added here dynamically -->
+          <!-- Example structure (will be generated by JS) -->
+          <!--
+          <div class="suggestion-card">
+            <div class="suggestion-img"><i class="fa-solid fa-utensils"></i></div>
+            <div class="suggestion-content">
+              <div class="suggestion-name">Recipe Name Here</div>
+              <div class="suggestion-info">
+                <span><i class="fa-solid fa-stopwatch"></i> 45 mins</span>
+                <span><i class="fa-solid fa-chart-simple"></i> Easy</span>
+              </div>
+            </div>
+          </div>
+          -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>test</p>
+    </div>
+  </footer>
+
+  <script>
+    // Get DOM elements
+    const meatForm = document.getElementById('meatForm');
+    const portionSizeSelect = document.getElementById('portionSize');
+    const customPortionGroup = document.getElementById('customPortionGroup');
+    const customPortionInput = document.getElementById('customPortion');
+    const meatTypeSelect = document.getElementById('meatType');
+    const meatWeightInput = document.getElementById('meatWeight');
+    const calculateBtn = document.getElementById('calculateBtn');
+
+    const totalServingsEl = document.getElementById('totalServings');
+    const cookingMethodEl = document.getElementById('cookingMethod');
+    const cookingTimeEl = document.getElementById('cookingTime');
+    const seasoningEl = document.getElementById('seasoning');
+    const suggestionCardsContainer = document.getElementById('suggestionCards');
+
+    // --- Event Listeners ---
+
+    // Show/hide custom portion input
+    portionSizeSelect.addEventListener('change', function() {
+      if (this.value === 'custom') {
+        customPortionGroup.classList.remove('hidden');
+        customPortionInput.required = true; // Make required if visible
+      } else {
+        customPortionGroup.classList.add('hidden');
+        customPortionInput.required = false; // Not required if hidden
+        customPortionInput.value = ''; // Clear value when hidden
+      }
+    });
+
+    // Handle form submission for calculation
+    meatForm.addEventListener('submit', function(e) {
+      e.preventDefault(); // Prevent default form submission
+
+      const meatType = meatTypeSelect.value;
+      const meatWeight = parseFloat(meatWeightInput.value);
+
+      // Determine portion size in grams
+      let portionGrams;
+      const selectedPortion = portionSizeSelect.value;
+
+      if (selectedPortion === 'small') {
+        portionGrams = 100;
+      } else if (selectedPortion === 'medium') {
+        portionGrams = 150;
+      } else if (selectedPortion === 'large') {
+        portionGrams = 200;
+      } else if (selectedPortion === 'custom') {
+        portionGrams = parseFloat(customPortionInput.value);
+        if (isNaN(portionGrams) || portionGrams <= 0) {
+          // Simple validation feedback (could be more sophisticated)
+          alert("Please enter a valid positive number for custom portion size.");
+           customPortionInput.focus();
+           customPortionInput.style.borderColor = 'red'; // Highlight error
+          return; // Stop calculation
+        }
+         customPortionInput.style.borderColor = ''; // Reset border on success
+      } else {
+          portionGrams = 150; // Fallback just in case
+      }
+
+      // --- Input Validation ---
+       if (isNaN(meatWeight) || meatWeight <= 0) {
+           alert("Please enter a valid positive number for meat weight.");
+           meatWeightInput.focus();
+           meatWeightInput.style.borderColor = 'red'; // Highlight error
+           return; // Stop calculation
+       }
+       meatWeightInput.style.borderColor = ''; // Reset border on success
+
+
+      // Perform calculation
+      const servingsNum = Math.floor(meatWeight / portionGrams);
+
+      // Get recommendations
+      const recommendations = lazyRecommendations[meatType] || { cooking: '-', time: '-', seasoning: '-' }; // Handle unknown type gracefully
+
+      // Update Results UI
+      totalServingsEl.textContent = servingsNum + (servingsNum === 1 ? " person" : " people");
+      cookingMethodEl.textContent = recommendations.cooking;
+      cookingTimeEl.textContent = recommendations.time;
+      seasoningEl.textContent = recommendations.seasoning;
+
+      // Update Recipe Suggestions UI
+      updateRecipeSuggestions(meatType);
+
+      // Optional: Scroll to results smoothly
+      document.getElementById('recipeSuggestions').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // --- Data (Keep your lazy data) ---
+    const lazyRecipes = {
+      pork: [
+        { name: "Crispy Pork Adobo", time: "45 mins", difficulty: "Easy", icon: "fa-solid fa-pepper-hot" },
+        { name: "Filipino Lechon Kawali", time: "60 mins", difficulty: "Medium", icon: "fa-solid fa-bacon" },
+        { name: "Pork Sinigang", time: "50 mins", difficulty: "Easy", icon: "fa-solid fa-bowl-food" }
+      ],
+      chicken: [
+        { name: "Chicken Tinola", time: "40 mins", difficulty: "Easy", icon: "fa-solid fa-drumstick-bite" },
+        { name: "Chicken Inasal", time: "60 mins", difficulty: "Medium", icon: "fa-solid fa-fire" },
+        { name: "Pininyahang Manok", time: "45 mins", difficulty: "Easy", icon: "fa-solid fa-lemon" } // Using lemon for pineapple
+      ],
+      beef: [
+        { name: "Beef Kaldereta", time: "90 mins", difficulty: "Medium", icon: "fa-solid fa-spoon" },
+        { name: "Beef Mechado", time: "75 mins", difficulty: "Medium", icon: "fa-solid fa-carrot" },
+        { name: "Beef Tapa", time: "60 mins", difficulty: "Easy", icon: "fa-solid fa-egg" }
+      ],
+      fish: [
+        { name: "Sinigang na Isda", time: "30 mins", difficulty: "Easy", icon: "fa-solid fa-fish-fins" },
+        { name: "Paksiw na Isda", time: "35 mins", difficulty: "Easy", icon: "fa-solid fa-fish" },
+        { name: "Fish Kinilaw", time: "20 mins", difficulty: "Easy", icon: "fa-regular fa-lemon" } // Regular lemon icon
+      ],
+      lamb: [
+        { name: "Lamb Caldereta", time: "90 mins", difficulty: "Hard", icon: "fa-solid fa-pepper-hot" },
+        { name: "Lamb Adobo", time: "60 mins", difficulty: "Medium", icon: "fa-solid fa-leaf" }, // Generic leaf icon
+        { name: "Spicy Lamb Curry", time: "75 mins", difficulty: "Medium", icon: "fa-solid fa-bowl-rice" }
+      ]
+    };
+
+    const lazyRecommendations = {
+       pork: {
+         cooking: "Grilling / Roasting",
+         time: "~25 min / 500g",
+         seasoning: "Garlic, Soy, Bay Leaves"
+       },
+       chicken: {
+         cooking: "Roasting / Grilling",
+         time: "~20 min / 500g",
+         seasoning: "Lemon, Garlic, Paprika"
+       },
+       beef: {
+         cooking: "Grilling / Stewing",
+         time: "~18 min / 500g (Med Rare)",
+         seasoning: "Salt, Pepper, Rosemary"
+       },
+       fish: {
+         cooking: "Baking / Pan-frying",
+         time: "~10 min / 500g",
+         seasoning: "Lemon, Herbs, Butter"
+       },
+       lamb: {
+         cooking: "Roasting / Slow-cook",
+         time: "~25 min / 500g",
+         seasoning: "Garlic, Rosemary, Cumin"
+       }
+    };
+
+
+    // --- Helper Functions ---
+
+    // Function to update recipe suggestions in the UI
+    function updateRecipeSuggestions(meatType) {
+      suggestionCardsContainer.innerHTML = ''; // Clear previous suggestions
+
+      const recipes = lazyRecipes[meatType] || []; // Get recipes or empty array
+
+        if (recipes.length === 0) {
+             suggestionCardsContainer.innerHTML = '<p style="color: var(--text-medium); grid-column: 1 / -1; text-align: center;">No specific recipes found for this meat type yet.</p>';
+             return;
+        }
+
+      recipes.forEach(recipe => {
+        const card = document.createElement('div');
+        card.className = 'suggestion-card';
+        // Use a default icon if specific one is missing
+        const iconClass = recipe.icon || "fa-solid fa-utensils";
+
+        card.innerHTML = `
+          <div class="suggestion-img"><i class="${iconClass}"></i></div>
+          <div class="suggestion-content">
+              <div class="suggestion-name">${recipe.name}</div>
+              <div class="suggestion-info">
+                <span><i class="fa-solid fa-stopwatch"></i> ${recipe.time}</span>
+                <span><i class="fa-solid fa-chart-simple"></i> ${recipe.difficulty}</span>
+              </div>
+          </div>
+        `;
+        // Add click listener (optional - could link to recipe pages)
+        card.addEventListener('click', () => {
+            alert(`Selected: ${recipe.name}\n(Recipe details page not implemented)`);
+        });
+
+        suggestionCardsContainer.appendChild(card);
+      });
+    }
+
+    // Initial population of suggestions based on default meat type
+    updateRecipeSuggestions(meatTypeSelect.value);
+
+  </script>
+</body>
+</html>
