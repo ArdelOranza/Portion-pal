@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "Pork Sinigang", time: "50 mins", difficulty: "Easy", icon: "fa-solid fa-bowl-food", desc: "A comforting sour and savory tamarind broth with pork and vegetables.", img: "https://images.unsplash.com/photo-1598511809546-e109b3688e0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }
         ],
         chicken: [
-            { name: "Comforting Chicken Tinola", time: "40 mins", difficulty: "Easy", icon: "fa-solid fa-drumstick-bite", desc: "A clear, gingery chicken soup with green papaya and chili leaves.", img: "https://images.unsplash.com/photo-1604909052399-f4a3b76c410c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
+            { name: "Chicken Tinola", time: "40 mins", difficulty: "Easy", icon: "fa-solid fa-drumstick-bite", desc: "A clear, gingery chicken soup with green papaya and chili leaves.", img: "https://images.unsplash.com/photo-1604909052399-f4a3b76c410c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
             { name: "Grilled Chicken Inasal", time: "60 mins", difficulty: "Medium", icon: "fa-solid fa-fire", desc: "Smoky grilled chicken marinated in vinegar, calamansi, lemongrass, and achiote oil.", img: "https://images.unsplash.com/photo-1598511809546-e109b3688e0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }, // Re-use image if needed
             { name: "Creamy Pininyahang Manok", time: "45 mins", difficulty: "Easy", icon: "fa-solid fa-lemon", desc: "Chicken stewed in a rich, creamy pineapple sauce with bell peppers.", img: "https://images.unsplash.com/photo-1606078553491-5a9a4f4954f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" } // Re-use image if needed
         ],
@@ -52,14 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "Filipino Beef Tapa", time: "Overnight Marinate", difficulty: "Easy", icon: "fa-solid fa-egg", desc: "Thinly sliced cured beef, pan-fried until caramelized, perfect with garlic rice.", img: "https://images.unsplash.com/photo-1560781290-7dc94c0f8f4f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }
         ],
          fish: [
-            { name: "Tangy Sinigang na Isda", time: "30 mins", difficulty: "Easy", icon: "fa-solid fa-fish-fins", desc: "A light and sour fish soup using tamarind broth and various vegetables.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { name: "Simple Paksiw na Isda", time: "35 mins", difficulty: "Easy", icon: "fa-solid fa-fish", desc: "Fish simmered gently in vinegar, garlic, ginger, and peppercorns.", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { name: "Refreshing Fish Kinilaw", time: "20 mins", difficulty: "Easy", icon: "fa-regular fa-lemon", desc: "Filipino ceviche where fresh fish is 'cooked' in vinegar or citrus juice.", img: "https://images.unsplash.com/photo-1559742811-82287ace5363?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }
+            { name: "Sinigang na Isda", time: "30 mins", difficulty: "Easy", icon: "fa-solid fa-fish-fins", desc: "A light and sour fish soup using tamarind broth and various vegetables.", img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
+            { name: "Paksiw na Isda", time: "35 mins", difficulty: "Easy", icon: "fa-solid fa-fish", desc: "Fish simmered gently in vinegar, garlic, ginger, and peppercorns.", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
+            { name: "Fish Kinilaw", time: "20 mins", difficulty: "Easy", icon: "fa-regular fa-lemon", desc: "Filipino ceviche where fresh fish is 'cooked' in vinegar or citrus juice.", img: "https://images.unsplash.com/photo-1559742811-82287ace5363?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }
         ],
         lamb: [
-            { name: "Hearty Lamb Caldereta", time: "100 mins", difficulty: "Hard", icon: "fa-solid fa-pepper-hot", desc: "A rich, spicy lamb stew similar to beef caldereta, slow-cooked until tender.", img: "https://images.unsplash.com/photo-1604011940196-83bba6a3c497?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
-            { name: "Aromatic Lamb Adobo", time: "70 mins", difficulty: "Medium", icon: "fa-solid fa-leaf", desc: "Lamb braised in the classic adobo sauce of soy, vinegar, garlic, and spices.", img: "https://images.unsplash.com/photo-1598511809546-e109b3688e0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }, // Re-use
-            { name: "Spiced Lamb Shank Curry", time: "120 mins", difficulty: "Medium", icon: "fa-solid fa-bowl-rice", desc: "Slow-cooked lamb shanks in a fragrant, spiced curry sauce until fall-off-the-bone.", img: "https://images.unsplash.com/photo-1625937998966-1f48adda361f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }
+            { name: " Lamb Caldereta", time: "100 mins", difficulty: "Hard", icon: "fa-solid fa-pepper-hot", desc: "A rich, spicy lamb stew similar to beef caldereta, slow-cooked until tender.", img: "https://images.unsplash.com/photo-1604011940196-83bba6a3c497?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" },
+            { name: " Lamb Adobo", time: "70 mins", difficulty: "Medium", icon: "fa-solid fa-leaf", desc: "Lamb braised in the classic adobo sauce of soy, vinegar, garlic, and spices.", img: "https://images.unsplash.com/photo-1598511809546-e109b3688e0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }, // Re-use
+            { name: "Lamb Shank Curry", time: "120 mins", difficulty: "Medium", icon: "fa-solid fa-bowl-rice", desc: "Slow-cooked lamb shanks in a fragrant, spiced curry sauce until fall-off-the-bone.", img: "https://images.unsplash.com/photo-1625937998966-1f48adda361f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" }
         ]
     };
 
