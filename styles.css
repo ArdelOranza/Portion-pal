@@ -23,6 +23,7 @@
     --border-radius-lg: 12px;
     --transition-speed: 0.3s;
     --container-width: 1180px;
+    --details-bg-light: #f8f9f9; /* Slightly off-white for details section */
 }
 
 /* --- Base Styles --- */
@@ -39,7 +40,7 @@ html {
 
 body {
     background-color: var(--background-color);
-    color: var(--text-medium); /* Default to medium text */
+    color: var(--text-medium);
     font-family: var(--font-primary);
     line-height: 1.7;
     font-weight: 400;
@@ -53,7 +54,7 @@ body {
 }
 
 /* --- Typography & Headings --- */
-h1, h2, h3 {
+h1, h2, h3, h4 {
     font-family: var(--font-heading);
     color: var(--text-dark);
     font-weight: 700;
@@ -62,7 +63,9 @@ h1, h2, h3 {
 }
 h1 { font-size: 2.8rem; }
 h2 { font-size: 2.2rem; }
-h3 { font-size: 1.5rem; }
+h3 { font-size: 1.5rem; } /* Used in calculator card titles */
+h4 { font-size: 1.25rem; margin-bottom: 0.6em;} /* Used for recipe card titles */
+/* h5 is styled specifically within recipe details */
 
 .subtitle {
     font-size: 1.15rem;
@@ -74,11 +77,10 @@ h3 { font-size: 1.5rem; }
 
 .section-heading {
     text-align: center;
-    margin-bottom: 40px; /* Space below section titles */
+    margin-bottom: 40px;
     position: relative;
     padding-bottom: 15px;
 }
-/* Optional: underline effect for section headings */
 .section-heading::after {
     content: '';
     position: absolute;
@@ -96,7 +98,7 @@ h3 { font-size: 1.5rem; }
     background-color: var(--card-background);
     padding: 15px 0;
     box-shadow: 0 2px 15px var(--shadow-light);
-    position: sticky; /* Make header sticky */
+    position: sticky;
     top: 0;
     z-index: 1000;
     transition: background-color var(--transition-speed) ease;
@@ -166,7 +168,7 @@ h3 { font-size: 1.5rem; }
 }
 
 .main-nav a:hover,
-.main-nav a.active { /* Add 'active' class via JS if needed */
+.main-nav a.active {
     color: var(--primary-color);
 }
 .main-nav a:hover::after,
@@ -176,7 +178,7 @@ h3 { font-size: 1.5rem; }
 
 /* --- Hero Section --- */
 .hero-section {
-    background: linear-gradient(135deg, rgba(253, 254, 254, 0.8), rgba(248, 249, 249, 0.9)), url('https://images.unsplash.com/photo-1551028150-64b9f398f678?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover; /* Example subtle background */
+    background: linear-gradient(135deg, rgba(253, 254, 254, 0.8), rgba(248, 249, 249, 0.9)), url('https://images.unsplash.com/photo-1551028150-64b9f398f678?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
     padding: 80px 0;
     text-align: center;
     color: var(--text-dark);
@@ -190,7 +192,7 @@ h3 { font-size: 1.5rem; }
 
 .hero-content .subtitle {
     margin-bottom: 35px;
-    color: var(--text-dark); /* Darker text on light bg */
+    color: var(--text-dark);
 }
 
 .cta-button {
@@ -214,7 +216,7 @@ h3 { font-size: 1.5rem; }
 
 /* --- Main Content & Calculator --- */
 .main-content {
-    padding-top: 20px; /* Space below hero/header */
+    padding-top: 20px;
 }
 
 .calculator-section {
@@ -225,10 +227,10 @@ h3 { font-size: 1.5rem; }
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
-    align-items: start; /* Align cards to the top */
+    align-items: start;
 }
 
-.card {
+.card { /* General card style used by calculator */
     background: var(--card-background);
     border-radius: var(--border-radius-lg);
     padding: 35px 40px;
@@ -236,19 +238,13 @@ h3 { font-size: 1.5rem; }
     border: 1px solid var(--border-color);
     transition: box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease;
 }
-/* Subtle lift on hover for cards */
-.card:hover {
-     /* transform: translateY(-4px); */
-     /* box-shadow: 0 15px 35px var(--shadow-medium); */
-}
 
-
-.card-title {
+.card-title { /* Calculator card title */
     margin-bottom: 30px;
     color: var(--text-dark);
     font-size: 1.3rem;
-    font-weight: 700; /* Poppins bold */
-    font-family: var(--font-primary); /* Use primary font for card titles */
+    font-weight: 700;
+    font-family: var(--font-primary);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -281,16 +277,15 @@ label {
 label i {
     width: 16px;
     text-align: center;
-    color: var(--primary-color); /* Use primary for icons */
+    color: var(--primary-color);
     opacity: 0.8;
 }
 
-/* Select Wrapper for Custom Arrow */
 .select-wrapper {
     position: relative;
 }
 .select-wrapper::after {
-    content: '\f078'; /* Font Awesome Angle Down */
+    content: '\f078';
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
     position: absolute;
@@ -298,17 +293,13 @@ label i {
     right: 18px;
     transform: translateY(-50%);
     color: var(--text-light);
-    pointer-events: none; /* Allow click through to select */
+    pointer-events: none;
     transition: color var(--transition-speed) ease;
 }
-select:focus + .select-wrapper::after { /* This won't work directly, style wrapper on select focus via JS if needed or simplify */
-     /* color: var(--primary-color); */
-}
-
 
 select, input[type="number"] {
     width: 100%;
-    padding: 14px 40px 14px 18px; /* Adjust padding for arrow */
+    padding: 14px 40px 14px 18px;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-md);
     font-size: 1rem;
@@ -316,15 +307,13 @@ select, input[type="number"] {
     color: var(--text-dark);
     background-color: #fff;
     transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-    appearance: none; /* Remove default arrow */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
 }
-/* Input doesn't need the extra right padding */
 input[type="number"] {
     padding: 14px 18px;
 }
-
 
 select:focus, input:focus {
     outline: none;
@@ -337,7 +326,6 @@ input::placeholder {
     opacity: 0.9;
 }
 
-/* Hide spinner buttons */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none; margin: 0; }
@@ -351,11 +339,11 @@ input[type=number] { -moz-appearance: textfield; }
     font-weight: 500;
     margin-top: 6px;
     min-height: 1.2em;
-    opacity: 0; /* Hidden by default */
+    opacity: 0;
     transition: opacity var(--transition-speed) ease;
 }
 input.input-error + .error-message,
-select.input-error + .error-message { /* Adjust if select wrapper interferes */
+.input-group:has(select.input-error) .error-message {
     opacity: 1;
 }
 
@@ -366,9 +354,12 @@ input.input-error, select.input-error {
 input.input-error:focus, select.input-error:focus {
      box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
 }
+.select-wrapper.input-error::after {
+    color: var(--error-color);
+}
 
 /* --- Button --- */
-.button { /* General button styles */
+.button {
     border: none;
     padding: 14px 25px;
     border-radius: var(--border-radius-md);
@@ -376,17 +367,17 @@ input.input-error:focus, select.input-error:focus {
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-speed) ease;
-    display: inline-flex; /* Use flex for icon alignment */
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    text-decoration: none; /* For potential <a> buttons */
+    text-decoration: none;
 }
 
 .primary-button {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
-    width: 100%; /* Make form button full width */
+    width: 100%;
     margin-top: 15px;
     box-shadow: 0 4px 15px rgba(192, 57, 43, 0.25);
 }
@@ -406,7 +397,7 @@ input.input-error:focus, select.input-error:focus {
     transform: none;
     opacity: 0.7;
 }
-.primary-button .fa-spinner { /* Spinner animation */
+.primary-button .fa-spinner {
     animation: spin 1s linear infinite;
 }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -414,7 +405,7 @@ input.input-error:focus, select.input-error:focus {
 
 /* --- Results Card --- */
 .results-wrapper {
-    min-height: 200px; /* Give it some initial height */
+    min-height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -435,9 +426,9 @@ input.input-error:focus, select.input-error:focus {
 
 .result-list {
     list-style: none;
-    width: 100%; /* Take full width when visible */
-    opacity: 0; /* Fade in */
-    transition: opacity 0.5s ease 0.1s; /* Delay fade-in slightly */
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.1s;
 }
 .result-list.visible {
     opacity: 1;
@@ -467,7 +458,6 @@ input.input-error:focus, select.input-error:focus {
     color: var(--secondary-color);
     font-size: 1.15em;
 }
-/* Highlight the main result */
 .result-item:first-child .result-label {
     color: var(--text-dark);
     font-weight: 600;
@@ -477,7 +467,6 @@ input.input-error:focus, select.input-error:focus {
     color: var(--primary-dark);
 }
 
-
 .result-value {
     font-weight: 600;
     color: var(--text-dark);
@@ -485,30 +474,24 @@ input.input-error:focus, select.input-error:focus {
     text-align: right;
 }
 
-/* --- Recipe Suggestions --- */
+/* --- Recipe Suggestions (Expandable Cards) --- */
 .recipe-suggestions {
-    margin-top: 60px; /* More space above recipes */
-    padding-top: 30px; /* Space after heading */
+    margin-top: 50px;
+    padding-top: 30px;
     margin-bottom: 60px;
 }
 
 .suggestion-cards-container {
     position: relative;
-    min-height: 200px; /* Prevent collapsing before load */
+    min-height: 200px;
 }
 
 .suggestion-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); /* Slightly wider cards */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
-    opacity: 0; /* Fade in */
-    transition: opacity 0.5s ease;
-}
-.suggestion-cards.visible {
-    opacity: 1;
 }
 
-/* General placeholder style */
 .placeholder-message {
     position: absolute;
     top: 50%;
@@ -523,70 +506,69 @@ input.input-error:focus, select.input-error:focus {
     border-radius: var(--border-radius-md);
     background-color: rgba(255, 255, 255, 0.5);
 }
-.placeholder-message.hidden { display: none; } /* Hide specific placeholder */
+.placeholder-message.hidden { display: none; }
 
-
+/* REVAMPED Suggestion Card */
 .suggestion-card {
     background: var(--card-background);
     border-radius: var(--border-radius-md);
     border: 1px solid var(--border-color);
     overflow: hidden;
-    transition: all var(--transition-speed) ease;
+    transition: box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease;
     display: flex;
     flex-direction: column;
     box-shadow: 0 5px 15px var(--shadow-light);
-    text-decoration: none; /* If card is a link */
-    cursor: pointer;
 }
 
-.suggestion-card:hover,
-.suggestion-card:focus {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px var(--shadow-medium);
-    border-color: var(--secondary-color);
-    outline: none;
+.suggestion-card:focus-within {
+     box-shadow: 0 8px 25px var(--shadow-medium);
+     border-color: var(--secondary-color);
+}
+
+.recipe-summary {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .suggestion-img-container {
-    height: 180px;
-    background-color: var(--border-color); /* Placeholder bg */
-    overflow: hidden; /* Ensure image fits */
+    height: 170px;
+    background-color: var(--border-color);
+    overflow: hidden;
     position: relative;
-    display: flex; /* Center icon fallback */
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 .suggestion-img-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cover the area */
+    object-fit: cover;
     transition: transform 0.4s ease;
 }
-/* Zoom effect on hover */
 .suggestion-card:hover .suggestion-img-container img {
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
-/* Icon fallback if image fails or isn't loaded */
 .suggestion-img-container i {
     font-size: 4rem;
     color: var(--text-light);
     opacity: 0.5;
 }
 
-.suggestion-content {
+.suggestion-content-summary {
     padding: 20px 25px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.suggestion-name {
-    font-weight: 600;
-    font-family: var(--font-heading); /* Use heading font */
-    font-size: 1.2rem;
+.suggestion-name { /* This is h4 */
+    font-weight: 700;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
     color: var(--text-dark);
     margin-bottom: 10px;
-    line-height: 1.4;
+    line-height: 1.3;
 }
 
 .suggestion-desc {
@@ -594,7 +576,11 @@ input.input-error:focus, select.input-error:focus {
     color: var(--text-medium);
     line-height: 1.6;
     margin-bottom: 15px;
-    flex-grow: 1; /* Allow desc to take up space */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .suggestion-tags {
@@ -602,6 +588,7 @@ input.input-error:focus, select.input-error:focus {
     gap: 8px;
     margin-bottom: 15px;
     flex-wrap: wrap;
+    margin-top: auto;
 }
 .tag {
     background-color: var(--border-color);
@@ -609,7 +596,7 @@ input.input-error:focus, select.input-error:focus {
     font-size: 0.75rem;
     font-weight: 500;
     padding: 3px 10px;
-    border-radius: 15px; /* Pill shape */
+    border-radius: 15px;
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -619,26 +606,101 @@ input.input-error:focus, select.input-error:focus {
 .tag.difficulty-medium { background-color: #FEF9E7; color: #F39C12; }
 .tag.difficulty-hard { background-color: #FADBD8; color: #C0392B; }
 
-
+/* Action Button (Expand/Collapse Trigger) */
 .suggestion-action {
-    margin-top: auto; /* Push to bottom */
-    padding-top: 15px;
+    padding: 15px 25px;
     border-top: 1px solid var(--border-color);
-    text-align: right;
+    background-color: #fdfdfd;
+    text-align: center;
 }
 
-.view-recipe-link {
+.expand-recipe-btn {
+    background: none;
+    border: none;
     color: var(--primary-color);
     font-weight: 600;
     font-size: 0.9rem;
-    text-decoration: none;
-    transition: color var(--transition-speed) ease;
+    cursor: pointer;
+    transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    border-radius: var(--border-radius-sm);
 }
-.view-recipe-link i { margin-left: 5px; }
-.view-recipe-link:hover {
+.expand-recipe-btn i {
+    transition: transform 0.3s ease;
+}
+.expand-recipe-btn:hover,
+.expand-recipe-btn:focus {
     color: var(--primary-dark);
+    background-color: #f0f0f0;
+    outline: none;
+}
+.suggestion-card.expanded .expand-recipe-btn i {
+    transform: rotate(180deg);
 }
 
+/* Hidden Recipe Details Section (For Expandable Card) */
+.recipe-details-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
+                opacity 0.4s ease-in-out 0.1s,
+                padding 0.6s ease;
+    background-color: var(--details-bg-light);
+    border-top: 1px solid var(--border-color);
+    padding: 0 25px;
+}
+.suggestion-card.expanded .recipe-details-content {
+    max-height: 1500px;
+    opacity: 1;
+    padding: 25px 25px;
+}
+.details-grid { /* Grid within expandable card */
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+.details-grid h5 {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+.details-grid h5 i {
+    color: var(--secondary-color);
+    width: 18px;
+    text-align: center;
+}
+.details-ingredients-list, .details-instructions-list {
+    list-style: none;
+    padding-left: 5px;
+    margin: 0;
+}
+.details-ingredients-list li, .details-instructions-list li {
+    margin-bottom: 10px;
+    color: var(--text-medium);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 22px;
+}
+.details-ingredients-list li::before {
+    content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--success-color); position: absolute; left: 0; top: 5px; font-size: 0.8em;
+}
+.details-instructions-list { counter-reset: instruction-counter-details; }
+.details-instructions-list li { counter-increment: instruction-counter-details; }
+.details-instructions-list li::before {
+    content: counter(instruction-counter-details); background-color: var(--secondary-color); color: white; font-size: 0.75em; font-weight: 600; border-radius: 50%; width: 1.6em; height: 1.6em; display: inline-block; text-align: center; line-height: 1.6em; position: absolute; left: 0px; top: 3px;
+}
 
 /* --- Footer --- */
 .site-footer {
@@ -685,7 +747,147 @@ input.input-error:focus, select.input-error:focus {
 }
 
 /* --- Utility --- */
-.hidden { display: none !important; } /* Ensure it overrides display properties */
+.hidden { display: none !important; }
+
+/* --- Recipe Modal (Styles Refined for Single Column Vertical Flow) --- */
+.recipe-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    padding: 20px;
+}
+.recipe-modal.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+}
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(44, 62, 80, 0.7);
+    cursor: pointer;
+}
+.modal-content { /* MODIFIED */
+    position: relative;
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    z-index: 1051;
+    width: 100%;
+    max-width: 750px; /* Adjusted width for vertical focus */
+    max-height: 88vh; /* Allow modal to use vertical space */
+    overflow-y: auto; /* Scroll the entire modal content if needed */
+    padding: 40px 45px; /* Good padding */
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    /* Reverted flex display */
+}
+.recipe-modal.active .modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+.modal-close-btn { /* Keep refined focus */
+    position: absolute; top: 18px; right: 18px; background: transparent; border: none; font-size: 1.7rem; color: var(--text-light); cursor: pointer; padding: 5px; line-height: 1; transition: opacity var(--transition-speed) ease; z-index: 1052; opacity: 0.7;
+}
+.modal-close-btn:hover { opacity: 1; }
+.modal-close-btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(86, 101, 115, 0.4); border-radius: 4px; opacity: 1; }
+
+/* MODIFIED Modal Body -> Single column flow */
+.modal-body {
+    /* Remove grid layout */
+    padding-bottom: 20px; /* Space at the very bottom */
+}
+
+.modal-image-container { /* MODIFIED */
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Widescreen */
+    overflow: hidden;
+    border-radius: var(--border-radius-md);
+    background-color: var(--border-color);
+    margin-bottom: 25px; /* Space below image */
+}
+.modal-image-container img { /* Unchanged */
+    width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit;
+}
+.modal-text-content {
+   /* This class might not be strictly needed anymore, content flows directly */
+}
+
+/* MODIFIED Modal Typography & Spacing for Vertical Flow */
+.modal-title { /* Center Title */
+    font-size: 2rem; /* Larger title */
+    margin-bottom: 15px;
+    line-height: 1.3;
+    color: var(--primary-dark);
+    font-family: var(--font-heading);
+    text-align: center;
+    max-width: 90%; /* Prevent very long titles */
+    margin-left: auto;
+    margin-right: auto;
+}
+.modal-description { /* Center Description */
+    font-size: 1rem; /* Slightly larger desc */
+    margin-bottom: 35px; /* More space below */
+    line-height: 1.75;
+    color: var(--text-medium);
+    text-align: center;
+    max-width: 85%; /* Restrict width */
+    margin-left: auto;
+    margin-right: auto;
+}
+.modal-details-grid { /* MODIFIED: Details BELOW description */
+    display: grid;
+    grid-template-columns: 1fr; /* Stack initially */
+    gap: 35px; /* Gap between Ingredients/Instructions columns when side-by-side */
+    margin-top: 30px; /* Space above details */
+    padding-top: 30px; /* More padding above */
+    border-top: 1px solid var(--border-color); /* Separator line */
+}
+.modal-details-grid > div {
+    /* No internal scrolling needed */
+    padding-bottom: 10px;
+}
+.modal-details-grid h4 { /* Detail headings */
+    font-size: 1.2rem; /* Larger detail headings */
+    margin-bottom: 18px; /* More space below heading */
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: transparent; /* No special background */
+    position: relative; /* Ensure it's not sticky */
+    /* Keep other styles */
+    font-family: var(--font-primary); font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 10px;
+}
+.modal-details-grid h4 i { /* Unchanged */
+    color: var(--secondary-color); font-size: 1.1em; width: 20px; text-align: center;
+}
+.modal-ingredients-list, .modal-instructions-list { /* Unchanged */
+    padding-top: 5px; list-style: none; padding-left: 5px; margin: 0;
+}
+.modal-ingredients-list li, .modal-instructions-list li { /* MODIFIED */
+    margin-bottom: 12px; /* More spacing */
+    font-size: 0.95rem; /* Slightly larger list font */
+    line-height: 1.7; /* More line height */
+    position: relative; padding-left: 28px; /* More indent */ color: var(--text-medium);
+}
+.modal-ingredients-list li::before { /* Icon - slight adjustment */
+    content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--success-color); position: absolute; left: 2px; top: 6px; font-size: 0.9em;
+}
+.modal-instructions-list { counter-reset: instruction-counter; }
+.modal-instructions-list li { counter-increment: instruction-counter; }
+.modal-instructions-list li::before { /* Number - slight adjustment */
+    content: counter(instruction-counter); background-color: var(--secondary-color); color: white; font-size: 0.75em; font-weight: 700; border-radius: 50%; width: 1.6em; height: 1.6em; display: inline-block; text-align: center; line-height: 1.6em; position: absolute; left: 0px; top: 5px;
+}
+
+/* --- Body scroll lock --- */
+body.modal-open { overflow: hidden; }
+
 
 /* --- Responsive Design --- */
 @media (max-width: 992px) {
@@ -693,8 +895,24 @@ input.input-error:focus, select.input-error:focus {
     .hero-section { padding: 60px 0; }
     h1 { font-size: 2.4rem; }
     h2 { font-size: 1.9rem; }
-    .main-nav ul { display: none; } /* Hide nav links for simplicity, add mobile menu toggle later */
-    .suggestion-cards { grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+    .main-nav ul { display: none; }
+    .suggestion-cards {
+         grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+     }
+}
+
+@media (min-width: 768px) { /* Apply side-by-side for details */
+    /* Expandable card details grid */
+    .details-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    /* Modal Details Grid Side-by-Side */
+    .modal-details-grid {
+        grid-template-columns: 1fr 1fr; /* Side-by-side */
+        gap: 40px; /* Adjust gap */
+    }
 }
 
 @media (max-width: 768px) {
@@ -702,9 +920,14 @@ input.input-error:focus, select.input-error:focus {
     .container { padding: 0 20px; }
     .hero-section { margin-bottom: 40px; }
     .card { padding: 30px; }
-    .suggestion-cards { gap: 20px; }
+    .suggestion-cards { gap: 25px; }
     .footer-content { flex-direction: column; text-align: center; }
     .footer-links { margin: 15px 0; }
+
+    /* Modal adjustments for tablet */
+    .modal-content { padding: 30px 35px; max-width: 90%; }
+    .modal-title { font-size: 1.8rem; }
+    .modal-description { font-size: 0.95rem; max-width: 95%; }
 }
 
 @media (max-width: 576px) {
@@ -715,6 +938,32 @@ input.input-error:focus, select.input-error:focus {
     .card { padding: 25px 20px; }
     .result-item { flex-direction: column; align-items: flex-start; gap: 5px; }
     .result-value { text-align: left; }
-    .suggestion-cards { grid-template-columns: 1fr; } /* Stack cards */
+
+    /* Expandable Card adjustments */
+    .suggestion-cards { grid-template-columns: 1fr; gap: 20px; }
     .suggestion-img-container { height: 160px; }
+    .suggestion-content-summary { padding: 15px 20px; }
+    .suggestion-name { font-size: 1.1rem; }
+    .suggestion-desc { font-size: 0.85rem; -webkit-line-clamp: 2; }
+    .tag { font-size: 0.7rem; padding: 2px 8px; }
+    .expand-recipe-btn { font-size: 0.85rem; }
+    .recipe-details-content { padding: 0 20px; }
+    .suggestion-card.expanded .recipe-details-content { padding: 20px 20px; }
+    .details-grid { gap: 20px; }
+    .details-grid h5 { font-size: 0.95rem; }
+    .details-ingredients-list li, .details-instructions-list li { font-size: 0.85rem; padding-left: 20px; }
+    .details-instructions-list li::before { width: 1.5em; height: 1.5em; line-height: 1.5em;}
+
+    /* Modal adjustments */
+    .recipe-modal { padding: 10px; }
+    .modal-content { padding: 20px 20px; max-height: 90vh; }
+    .modal-image-container { margin-bottom: 20px; aspect-ratio: 4 / 3; } /* Adjust aspect ratio for mobile */
+    .modal-title { font-size: 1.5rem; }
+    .modal-description { font-size: 0.85rem; margin-bottom: 20px; max-width: 100%; }
+    .modal-details-grid { gap: 25px; margin-top: 20px; padding-top: 20px; grid-template-columns: 1fr; } /* Ensure stacking */
+    .modal-details-grid h4 { font-size: 1rem; margin-bottom: 10px; }
+    .modal-ingredients-list li, .modal-instructions-list li { font-size: 0.85rem; padding-left: 22px; line-height: 1.6; margin-bottom: 8px; }
+    .modal-ingredients-list li::before { top: 4px; }
+    .modal-instructions-list li::before { top: 4px; width: 1.5em; height: 1.5em; line-height: 1.5em;}
+    .modal-close-btn { top: 10px; right: 10px; font-size: 1.4rem; }
 }
