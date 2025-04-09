@@ -1,355 +1,891 @@
-/* --- CSS Variables --- */
-:root {
-    --primary-color: #C0392B; /* Deep Red */
-    --primary-dark: #A93226;
-    --primary-light: #E74C3C;
-    --secondary-color: #E67E22; /* Warm Orange */
-    --accent-color: #F39C12; /* Gold Accent */
-    --background-color: #F9F9F9; /* Slightly Off-white */
-    --card-background: #FFFFFF;
-    --text-dark: #2C3E50; /* Dark Blue/Gray */
-    --text-medium: #566573;
-    --text-light: #808B96; /* Slightly lighter grey */
-    --border-color: #EAECEE; /* Softer border */
-    --shadow-light: rgba(44, 62, 80, 0.07); /* Softer */
-    --shadow-medium: rgba(44, 62, 80, 0.11);
-    --shadow-hover: rgba(44, 62, 80, 0.16);
-    --success-color: #27AE60;
-    --error-color: #C0392B; /* Match primary */
-    --error-background: #FDEDEC; /* Lighter red background */
-    --font-primary: 'Poppins', sans-serif;
-    --font-heading: 'Playfair Display', serif;
-    --border-radius-sm: 6px;
-    --border-radius-md: 12px; /* More rounded */
-    --border-radius-lg: 16px;
-    --transition-speed: 0.3s;
-    --container-width: 1240px; /* Wider container */
-    --scrollbar-width: 15px; /* Default scrollbar width */
-}
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Elements ---
+    const meatForm = document.getElementById('meatForm');
+    const portionSizeSelect = document.getElementById('portionSize');
+    const customPortionGroup = document.getElementById('customPortionGroup');
+    const customPortionInput = document.getElementById('customPortion');
+    const meatTypeSelect = document.getElementById('meatType');
+    const meatWeightInput = document.getElementById('meatWeight');
+    const meatWeightUnitSelect = document.getElementById('meatWeightUnit');
+    const calculateBtn = document.getElementById('calculateBtn');
 
-/* --- Base Styles --- */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; font-size: 16px; scrollbar-gutter: stable both-edges; } /* Reserve space for scrollbar */
-body {
-    background-color: var(--background-color); color: var(--text-medium); font-family: var(--font-primary); line-height: 1.75; font-weight: 400; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-}
-.container { max-width: var(--container-width); margin: 0 auto; padding: 0 20px; }
-img { max-width: 100%; height: auto; display: block; }
+    const resultsWrapper = document.getElementById('resultsWrapper');
+    const resultPlaceholder = document.getElementById('resultPlaceholder');
+    const resultList = document.getElementById('resultList');
+    const resultLoadingIndicator = document.getElementById('resultLoadingIndicator');
 
-/* --- Typography & Headings --- */
-h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--text-dark); font-weight: 700; line-height: 1.3; margin-bottom: 0.8em; }
-h1 { font-size: 3.2rem; letter-spacing: -0.5px; }
-h2 { font-size: 2.5rem; }
-h3 { font-size: 1.6rem; } /* Card titles */
-h4 { font-size: 1.3rem; margin-bottom: 0.6em;} /* Recipe card titles */
-.subtitle { font-size: 1.25rem; color: var(--text-medium); max-width: 700px; margin-left: auto; margin-right: auto; font-weight: 300; }
-.section-heading { text-align: center; margin-bottom: 60px; position: relative; padding-bottom: 20px; }
-.section-heading::after {
-    content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 80px; height: 4px; background: linear-gradient(90deg, var(--secondary-color), var(--primary-color)); border-radius: 3px;
-}
+    const recipeSuggestionsSection = document.getElementById('recipes');
+    const recipePlaceholder = document.getElementById('recipePlaceholder');
+    const suggestionCarouselContainer = document.getElementById('suggestionCarouselContainer');
+    const recipeSwiperWrapper = document.getElementById('recipeSwiperWrapper');
+    const recipeLoadingIndicator = document.getElementById('recipeLoadingIndicator');
 
-/* --- Header --- */
-.site-header { background-color: var(--card-background); padding: 18px 0; box-shadow: 0 5px 25px var(--shadow-light); position: sticky; top: 0; z-index: 1000; transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease; }
-.main-nav { display: flex; align-items: center; justify-content: space-between; }
-.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--primary-dark); }
-.logo-icon { font-size: 2rem; color: var(--primary-color); transition: transform var(--transition-speed) cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-.logo:hover .logo-icon { transform: rotate(-15deg) scale(1.1); }
-.logo-text { font-family: var(--font-heading); font-size: 1.7rem; font-weight: 700; }
-.logo-text sup { font-size: 0.8rem; font-weight: 600; color: var(--secondary-color); margin-left: 3px; position: relative; top: -7px; }
-.main-nav ul { list-style: none; display: flex; gap: 35px; }
-.main-nav a { text-decoration: none; color: var(--text-medium); font-weight: 500; padding: 8px 5px; position: relative; transition: color var(--transition-speed) ease; }
-.main-nav a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background-color: var(--primary-color); transition: width var(--transition-speed) ease; }
-.main-nav a:hover, .main-nav a.active { color: var(--primary-color); }
-.main-nav a:hover::after, .main-nav a.active::after { width: 100%; }
+    const recipeModal = document.getElementById('recipeModal');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalRecipeImage = document.getElementById('modalRecipeImage');
+    const modalImagePlaceholder = document.querySelector('.modal-image-placeholder'); // Get placeholder SVG
+    const modalRecipeTitle = document.getElementById('recipeModalTitle');
+    const modalRecipeDesc = document.getElementById('modalRecipeDesc');
+    const modalIngredientsList = document.getElementById('modalIngredientsList');
+    const modalInstructionsList = document.getElementById('modalInstructionsList');
 
-/* --- Hero Section --- */
-.hero-section {
-    background:
-        linear-gradient(rgba(249, 249, 249, 0.88), rgba(249, 249, 249, 0.97)),
-        url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"%3E%3Cg fill="%23EAECEE" fill-opacity="0.4"%3E%3Cpath fill-rule="evenodd" d="M0 0h28v2H0V0zm28 4v2h-2V4h2zm-2 2h2v2h-2V6zm-2 2h2v2h-2V8zm-2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-2 2h2v2H2v-2zm-2 2h2v2H0v-2z"/%3E%3C/g%3E%3C/svg%3E'),
-        url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=85') no-repeat center center/cover;
-    padding: 120px 0; text-align: center; color: var(--text-dark); margin-bottom: 80px; border-bottom: 1px solid var(--border-color);
-}
-.hero-content h1 { color: var(--primary-dark); margin-bottom: 25px; }
-.hero-content .subtitle { margin-bottom: 45px; color: var(--text-dark); }
-.cta-button {
-    display: inline-block; background: linear-gradient(135deg, var(--primary-light), var(--primary-color)); color: white; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.15rem; letter-spacing: 0.5px; box-shadow: 0 8px 25px rgba(192, 57, 43, 0.3); transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.cta-button i { margin-left: 12px; transition: transform 0.3s ease; }
-.cta-button:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 12px 30px rgba(192, 57, 43, 0.4); }
-.cta-button:hover i { transform: translateX(5px); }
+    const currentYearSpan = document.getElementById('currentYear');
 
-/* --- Main Content & Calculator --- */
-.main-content { padding-top: 30px; }
-.calculator-section { margin-bottom: 80px; }
-.calculator-container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 50px; align-items: stretch; }
-.card { background: var(--card-background); border-radius: var(--border-radius-lg); padding: 40px 45px; box-shadow: 0 15px 40px var(--shadow-light); border: 1px solid var(--border-color); transition: box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease; display: flex; flex-direction: column; }
-.card:hover { box-shadow: 0 18px 50px var(--shadow-medium); transform: translateY(-3px); }
-.card-title { margin-bottom: 35px; color: var(--text-dark); font-size: 1.4rem; font-weight: 600; font-family: var(--font-primary); display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 18px; }
-.card-icon { color: var(--primary-color); font-size: 1.5rem; width: 30px; text-align: center; }
+    // --- Data ---
+    const portionSizes = { small: 100, medium: 150, large: 200 };
+    const recommendationsData = {
+       pork: { cooking: "Roast, Grill, Pan-fry, Stew, Adobo", time: "≈25-30m / 500g Roast", seasoning: "Garlic, Soy, Vinegar, Pepper, Bay Leaf, Paprika" },
+       chicken: { cooking: "Roast, Grill, Stew, Fry, Tinola, Inasal", time: "≈20-25m / 500g Roast", seasoning: "Lemon, Ginger, Garlic, Onion, Annatto, Lemongrass" },
+       beef: { cooking: "Grill, Stew, Roast, Braise, Tapa, Bistek", time: "Varies (≈18m Grill, 90m+ Stew)", seasoning: "Salt, Pepper, Soy, Calamansi, Garlic, Onion, Tomato" },
+       fish: { cooking: "Bake, Pan-fry, Steam, Grill, Sinigang, Paksiw", time: "≈10-20m (method dependent)", seasoning: "Lemon, Vinegar, Ginger, Garlic, Tomato, Tamarind, Patis" },
+    };
 
-/* --- Form Elements --- */
-.input-group { margin-bottom: 28px; position: relative; }
-label { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 500; color: var(--text-medium); font-size: 1rem; }
-label i { width: 18px; text-align: center; color: var(--primary-color); opacity: 0.9; font-size: 1.1em; }
-.select-wrapper { position: relative; }
-.select-wrapper::after { content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: 50%; right: 20px; transform: translateY(-50%); color: var(--text-light); pointer-events: none; transition: color var(--transition-speed) ease, transform 0.2s ease; font-size: 0.9em; }
-/* Correct focus selector for wrapper */
-.select-wrapper:focus-within::after { transform: translateY(-50%) rotate(180deg); }
-select, input[type="number"] {
-    width: 100%; padding: 16px 45px 16px 20px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); font-size: 1rem; font-family: var(--font-primary); color: var(--text-dark); background-color: var(--card-background); transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease; appearance: none; -webkit-appearance: none; -moz-appearance: none;
-}
-input[type="number"] { padding: 16px 20px; }
-select:focus, input:focus { outline: none; border-color: var(--secondary-color); box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.1); background-color: #fff; }
-input::placeholder { color: var(--text-light); opacity: 0.7; }
-input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type=number] { -moz-appearance: textfield; }
+    // ========================================================================
+    // == Recipe Data (Updated & Refined) =====================================
+    // ========================================================================
+    const recipesData = {
+        pork: [
+            {
+                name: "Classic Pork Adobo",
+                time: "45 mins",
+                difficulty: "Easy",
+                icon: "fa-solid fa-pepper-hot",
+                desc: "A savory and tangy Filipino staple, slow-braised to perfection with soy sauce, vinegar, garlic, and spices.",
+                img: "https://salu-salo.com/wp-content/uploads/2015/04/Pork-Adobo-3.jpg", // Image present
+                baseMeatWeight: 1000,
+                ingredients: [
+                    { text: "Soy Sauce", baseQty: 120, unit: "ml" },
+                    { text: "White Vinegar (Cane or Coconut preferred)", baseQty: 60, unit: "ml" },
+                    { text: "Garlic, crushed", baseQty: 1, unit: "head" },
+                    { text: "Whole Peppercorns, lightly crushed", baseQty: 1, unit: "tsp" },
+                    { text: "Dried Bay Leaves", baseQty: 3, unit: "pcs" },
+                    { text: "Water or Broth", baseQty: 120, unit: "ml" },
+                    { text: "Cooking Oil (optional, for browning)", baseQty: 30, unit: "ml" }
+                ],
+                instructions: ["Combine pork, soy sauce, and garlic in a pot. Marinate for at least 30 minutes (optional but recommended).", "Add water/broth, whole peppercorns, and bay leaves.", "Bring to a boil over medium-high heat.", "Lower heat, cover, and simmer for 30-40 minutes, or until pork is tender, adding a bit more water if it dries out too much.", "Add vinegar. Do not stir. Increase heat slightly and let it boil gently for 5 minutes to cook off the harshness.", "Simmer uncovered for another 10-15 minutes, stirring occasionally, to reduce and thicken the sauce.", "Optional: Remove pork from sauce, heat oil in a separate pan, and brown the pork pieces until slightly crisp. Return to sauce.", "Serve hot with steamed rice."]
+            },
+            {
+                name: "Crispy Lechon Kawali",
+                time: "60 mins + Drying",
+                difficulty: "Medium",
+                icon: "fa-solid fa-bacon",
+                desc: "Deep-fried pork belly boasting incredibly crunchy skin (crackling) and succulent, tender meat.",
+                img: "https://static01.nyt.com/images/2023/11/28/multimedia/ND-Lechon-Kawali-bflv/ND-Lechon-Kawali-bflv-mediumSquareAt3X.jpg", // Image present
+                baseMeatWeight: 1000,
+                ingredients: [
+                    { text: "Water for boiling", baseQty: null, unit: "enough to cover pork" },
+                    { text: "Salt (for boiling)", baseQty: 15, unit: "ml" },
+                    { text: "Whole Peppercorns (for boiling)", baseQty: 1, unit: "tsp" },
+                    { text: "Bay Leaves (for boiling)", baseQty: 3, unit: "pcs" },
+                    { text: "Garlic cloves, crushed (for boiling, optional)", baseQty: 4, unit: "cloves" },
+                    { text: "Salt (for rubbing skin)", baseQty: 1, unit: "tsp" },
+                    { text: "Cooking Oil for deep frying", baseQty: null, unit: "enough for deep frying (at least 2-3 inches deep)" }
+                ],
+                instructions: ["Place pork belly in a pot. Add enough water to cover completely. Add salt (15ml), peppercorns, bay leaves, and optional garlic.", "Bring to a boil, skimming off any impurities that rise to the surface.", "Lower heat, cover loosely, and simmer for 45-60 minutes or until the meat is tender but not falling apart.", "Carefully remove pork from the pot and place on a wire rack to cool slightly.", "Pat the entire surface, especially the skin, completely dry with paper towels. This is CRUCIAL for crispiness.", "Prick the skin all over with a fork, skewer, or knife tip (avoid piercing the meat). Rub the skin evenly with salt (1 tsp).", "Air dry the pork belly, uncovered, on a wire rack set over a tray in the refrigerator for at least 4-6 hours, ideally overnight. The drier the skin, the crispier it will be.", "Heat oil in a deep, heavy-bottomed pot or wok to 350-375°F (175-190°C) over medium-high heat.", "Carefully lower the dried pork belly into the hot oil, skin-side down. Use a splatter screen as it will splatter violently.", "Fry for 15-25 minutes, maintaining the temperature, until the skin is golden brown, blistered, and very crispy.", "Carefully flip the pork belly using tongs and fry the meat side for another 5-10 minutes until golden brown.", "Remove from oil and drain on a wire rack. Let it rest for at least 10-15 minutes before chopping.", "Chop into bite-sized pieces and serve immediately with lechon sauce (Mang Tomas) or spiced vinegar."]
+            },
+            {
+                name: "Pork Sinigang",
+                time: "50 mins",
+                difficulty: "Easy",
+                icon: "fa-solid fa-bowl-food",
+                desc: "A comforting sour and savory tamarind-based soup, loaded with tender pork ribs or belly and various vegetables.",
+                img: "https://images.yummy.ph/yummy/uploads/2019/03/sinigangbaboysamiso-recipe-1.jpg", // Image present
+                baseMeatWeight: 500,
+                ingredients: [
+                    { text: "Tamarind Soup Base (Sinigang Mix)", baseQty: 1, unit: "packet (approx 40g)" },
+                    { text: "Large Onion, quartered", baseQty: 1, unit: "pcs" },
+                    { text: "Medium Tomatoes, quartered", baseQty: 2, unit: "pcs" },
+                    { text: "Daikon Radish (Labanos), peeled and sliced", baseQty: 1, unit: "medium pcs" },
+                    { text: "String Beans (Sitaw), cut into 2-inch lengths", baseQty: 1, unit: "bundle (approx 150g)" },
+                    { text: "Okra, ends trimmed", baseQty: 8, unit: "pcs" },
+                    { text: "Water Spinach (Kangkong) or Bok Choy leaves", baseQty: 1, unit: "bundle (approx 200g)" },
+                    { text: "Taro (Gabi), peeled and cubed (optional, for thickening)", baseQty: 2, unit: "small pcs" },
+                    { text: "Finger Chilies (Siling Pangsigang, optional)", baseQty: 2, unit: "pcs" },
+                    { text: "Fish Sauce (Patis)", baseQty: null, unit: "to taste" },
+                    { text: "Water", baseQty: 1500, unit: "ml" }
+                ],
+                instructions: ["In a large pot, combine pork and water. Bring to a boil, skimming off any scum that rises to the surface.", "Add onion, tomatoes, and optional taro (gabi). Lower heat, cover, and simmer for 30-45 minutes, or until pork is tender (taro should also be soft if using).", "Add the tamarind soup base (Sinigang Mix) and Daikon radish. Stir well and simmer for 5-7 minutes.", "Add string beans, okra, and finger chilies (if using). Cook for another 3-5 minutes until vegetables are tender-crisp.", "Stir in the water spinach (or bok choy) and cook for 1 more minute until just wilted.", "Season with fish sauce (patis) according to your preference. Start with a tablespoon or two and add more as needed.", "Serve steaming hot, usually with rice."]
+            },
+            {
+                name: "Pork Menudo",
+                time: "60 mins",
+                difficulty: "Medium",
+                icon: "fa-solid fa-carrot",
+                desc: "A popular Filipino stew with diced pork and liver in a rich tomato sauce with potatoes, carrots, and raisins.",
+                img: "https://assets.unileversolutions.com/recipes-v2/214409.png", // Image present
+                baseMeatWeight: 500, // + 250g Liver
+                  ingredients: [
+                    { text: "Pork Liver, diced", baseQty: 250, unit: "g" },
+                    { text: "Soy Sauce (for marinade)", baseQty: 60, unit: "ml" },
+                    { text: "Calamansi Juice or Lemon Juice (for marinade)", baseQty: 30, unit: "ml" },
+                    { text: "Medium Onion, chopped", baseQty: 1, unit: "pcs" },
+                    { text: "Garlic, minced", baseQty: 4, unit: "cloves" },
+                    { text: "Tomato Sauce", baseQty: 225, unit: "ml" },
+                    { text: "Water or Broth", baseQty: 240, unit: "ml" },
+                    { text: "Potatoes, peeled and diced small", baseQty: 2, unit: "medium pcs" },
+                    { text: "Carrots, peeled and diced small", baseQty: 1, unit: "large pcs" },
+                    { text: "Red Bell Pepper, diced", baseQty: 1, unit: "medium pcs" },
+                    { text: "Green Peas (frozen or canned)", baseQty: 80, unit: "ml" },
+                    { text: "Raisins", baseQty: 80, unit: "ml" },
+                    { text: "Bay Leaf", baseQty: 1, unit: "pcs" },
+                    { text: "Cooking Oil", baseQty: 30, unit: "ml" },
+                    { text: "Salt and Black Pepper", baseQty: null, unit: "to taste" },
+                    { text: "Sugar (optional, to balance acidity)", baseQty: 1, unit: "tsp" }
+                ],
+                instructions: ["In a bowl, marinate the diced pork (not the liver) in soy sauce and calamansi/lemon juice for at least 15-30 minutes.", "Heat half the oil in a pot or Dutch oven over medium-high heat. Lightly fry the diced potatoes and carrots until edges are slightly browned. Remove and set aside.", "Add the remaining oil. Sauté the diced liver quickly for 1-2 minutes until lightly browned (do not overcook). Remove and set aside.", "In the same pot, sauté onion and garlic until fragrant.", "Add the marinated pork (drain excess marinade but reserve it). Cook until lightly browned on all sides.", "Pour in the tomato sauce, reserved marinade, water/broth, and add the bay leaf. Bring to a boil.", "Lower heat, cover, and simmer for 20-30 minutes, or until the pork is tender.", "Add the pre-fried potatoes and carrots back into the pot. Simmer for 10-15 minutes until vegetables are fully cooked.", "Stir in the cooked liver, red bell pepper, green peas, and raisins. Cook for another 5 minutes.", "Season with salt, black pepper, and optional sugar to taste. Adjust sauce consistency with a little water if needed.", "Remove bay leaf before serving. Serve hot with steamed rice."]
+            }
+        ],
+        chicken: [
+            {
+                name: "Chicken Tinola",
+                time: "40 mins",
+                difficulty: "Easy",
+                icon: "fa-solid fa-drumstick-bite",
+                desc: "A clear, gingery chicken soup with green papaya or chayote, and chili leaves, known for its clean and warming flavors.",
+                img: "https://www.allrecipes.com/thmb/DffejbaV_BtbfcfuMfLZC5psayI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/212929-chicken-tinola-ddmfs-beauty-1x2-4792da9f161f41acb50bdd25b74c3d8e.jpg", // Image present
+                baseMeatWeight: 1000,
+                ingredients: [
+                    { text: "Ginger, peeled and sliced thinly", baseQty: 2, unit: "thumb-sized pcs" },
+                    { text: "Medium Onion, chopped", baseQty: 1, unit: "pcs" },
+                    { text: "Garlic, minced", baseQty: 5, unit: "cloves" },
+                    { text: "Small Green Papaya or Chayote (Sayote), peeled and sliced", baseQty: 1, unit: "pcs" },
+                    { text: "Chili Leaves (Dahon ng Sili) or Malunggay Leaves", baseQty: 1, unit: "cup loosely packed" },
+                    { text: "Fish Sauce (Patis)", baseQty: 45, unit: "ml" },
+                    { text: "Water or Rice Washing (Hugas Bigas)", baseQty: 1600, unit: "ml" },
+                    { text: "Cooking Oil", baseQty: 30, unit: "ml" },
+                    { text: "Black pepper", baseQty: null, unit: "to taste" }
+                ],
+                instructions: ["Heat oil in a large pot over medium heat. Sauté ginger until fragrant (about 1-2 minutes).", "Add onion and garlic, sauté until onion is softened.", "Add chicken pieces and cook, stirring occasionally, until lightly browned on all sides.", "Season with fish sauce (patis) and cook, stirring, for 1-2 minutes.", "Pour in water or rice washing. Bring to a boil.", "Lower the heat, cover, and simmer for 20-25 minutes, or until the chicken is cooked through and tender.", "Add the green papaya or chayote slices. Simmer for 5-8 minutes until tender but not mushy.", "Stir in the chili leaves or malunggay leaves. Cook for another minute until wilted.", "Season with black pepper and add more fish sauce if needed, according to taste.", "Serve hot in bowls."]
+            },
+            {
+                name: "Chicken Inasal",
+                time: "30 mins + Marinating",
+                difficulty: "Medium",
+                icon: "fa-solid fa-fire",
+                desc: "Smoky, vibrant grilled chicken from Bacolod, marinated and brushed with achiote oil.",
+                img: "https://www.maggi.ph/sites/default/files/srh_recipes/fb57f76d3cd9b83f1509f030c7024b51.jpg", // Image present
+                baseMeatWeight: 1000,
+                ingredients: [
+                    { text: "Coconut Vinegar", baseQty: 120, unit: "ml" },
+                    { text: "Calamansi Juice (or 50/50 lemon/lime juice)", baseQty: 60, unit: "ml" },
+                    { text: "Lemongrass, white part only, pounded and chopped", baseQty: 3, unit: "stalks" },
+                    { text: "Ginger, minced", baseQty: 45, unit: "ml" },
+                    { text: "Garlic, minced", baseQty: 8, unit: "cloves" },
+                    { text: "Brown Sugar", baseQty: 15, unit: "ml" },
+                    { text: "Salt", baseQty: 1, unit: "tsp" },
+                    { text: "Black Pepper, freshly ground", baseQty: 0.5, unit: "tsp" },
+                    { text: "Annatto/Achiote Oil", baseQty: 60, unit: "ml" },
+                    { text: "Melted Butter or Margarine", baseQty: 60, unit: "ml" },
+                    { text: "Garlic, minced (for basting)", baseQty: 2, unit: "cloves" },
+                    { text: "Salt (for basting)", baseQty: 1, unit: "pinch" }
+                ],
+                instructions: ["In a large bowl or ziplock bag, combine all marinade ingredients: vinegar, calamansi juice, lemongrass, ginger, garlic, brown sugar, salt, and pepper. Mix well.", "Add chicken pieces (pierce skin/meat lightly with a fork if desired), ensuring they are well-coated. Marinate in the refrigerator for at least 2 hours, preferably 4 hours or overnight.", "Prepare the basting sauce: Gently heat the annatto oil with minced garlic until fragrant (do not burn). Remove from heat and stir in melted butter/margarine and a pinch of salt.", "Preheat grill (charcoal preferred for smoky flavor) to medium heat. Oil the grates.", "Remove chicken from marinade, letting excess drip off (reserve some marinade if making a dipping sauce). Thread onto skewers if using smaller pieces.", "Grill chicken for 15-25 minutes per side, depending on thickness, or until cooked through (internal temp 165°F/74°C) and juices run clear. Turn occasionally to prevent burning.", "Brush generously with the achiote basting sauce during the last 10 minutes of grilling, turning and basting each side.", "Serve hot with steamed rice and a dipping sauce (typically soy sauce, vinegar, calamansi, chopped chili - sometimes with a bit of reserved marinade added)."]
+            },
+            {
+                name: "Pininyahang Manok",
+                time: "45 mins",
+                difficulty: "Easy",
+                icon: "fa-solid fa-pineapple",
+                desc: "A delightful Filipino chicken stew simmered in a rich, creamy pineapple sauce.",
+                img: "https://images.aws.nestle.recipes/original/b42aab367ffbac6ba2c782e1dc316c8d_Pininyahang_Manok_main.jpg", // Image present
+                baseMeatWeight: 1000,
+                ingredients: [
+                    { text: "Pineapple Chunks or Tidbits in heavy syrup", baseQty: 1, unit: "can (20 oz / 567g)" },
+                    { text: "Pineapple Syrup (reserved from can)", baseQty: 1, unit: "can's worth" },
+                    { text: "Evaporated Milk or All-Purpose Cream", baseQty: 240, unit: "ml" },
+                    { text: "Medium Onion, chopped", baseQty: 1, unit: "pcs" },
+                    { text: "Garlic, minced", baseQty: 4, unit: "cloves" },
+                    { text: "Red Bell Pepper, sliced", baseQty: 1, unit: "pcs" },
+                    { text: "Green Bell Pepper, sliced (optional)", baseQty: 0.5, unit: "pcs" },
+                    { text: "Carrot, sliced (optional)", baseQty: 1, unit: "medium pcs" },
+                    { text: "Fish Sauce (Patis)", baseQty: 30, unit: "ml" },
+                    { text: "Cooking Oil", baseQty: 30, unit: "ml" },
+                    { text: "Salt and Black Pepper", baseQty: null, unit: "to taste" }
+                ],
+                instructions: ["Drain pineapple chunks, reserving the syrup. Set pineapple chunks aside.", "Heat oil in a large pot or Dutch oven over medium heat. Sauté onion and garlic until fragrant.", "Add chicken pieces and cook, stirring occasionally, until lightly browned on all sides.", "Pour in the reserved pineapple syrup and add fish sauce (patis). Bring to a simmer.", "Lower the heat, cover, and cook for 20-25 minutes or until chicken is tender and cooked through.", "Add pineapple chunks, bell peppers, and carrots (if using). Stir and cook for 5 minutes until vegetables are tender-crisp.", "Pour in the evaporated milk or cream. Stir gently and heat through for another 3-5 minutes. Do not bring to a rolling boil after adding milk/cream.", "Season with salt and black pepper to taste. Add a pinch more fish sauce if desired.", "Serve hot with steamed rice."]
+            },
+            {
+                name: "Chicken Afritada",
+                time: "50 mins",
+                difficulty: "Easy",
+                icon: "fa-solid fa-bell",
+                desc: "A classic Filipino chicken stew cooked in tomato sauce with potatoes, carrots, and bell peppers.",
+                img: "https://www.mysugarfreekitchen.com/wp-content/uploads/2020/03/Chicken-Afritada-14.jpg", // Image present
+                baseMeatWeight: 1000,
+                ingredients: [
+                    { text: "Medium Onion, chopped", baseQty: 1, unit: "pcs" },
+                    { text: "Garlic, minced", baseQty: 4, unit: "cloves" },
+                    { text: "Tomato Sauce", baseQty: 425, unit: "ml" },
+                    { text: "Water or Chicken Broth", baseQty: 240, unit: "ml" },
+                    { text: "Potatoes, peeled and cubed", baseQty: 2, unit: "large pcs" },
+                    { text: "Carrots, peeled and sliced or cubed", baseQty: 2, unit: "medium pcs" },
+                    { text: "Red Bell Pepper, sliced", baseQty: 1, unit: "pcs" },
+                    { text: "Green Bell Pepper, sliced", baseQty: 1, unit: "pcs" },
+                    { text: "Green Peas (optional, frozen or canned)", baseQty: 80, unit: "ml" },
+                    { text: "Bay Leaf", baseQty: 1, unit: "pcs" },
+                    { text: "Fish Sauce (Patis) or Soy Sauce", baseQty: 30, unit: "ml" },
+                    { text: "Cooking Oil", baseQty: 30, unit: "ml" },
+                    { text: "Salt and Black Pepper", baseQty: null, unit: "to taste" },
+                    { text: "Sugar (optional)", baseQty: 0.5, unit: "tsp" }
+                ],
+                instructions: ["Optional: Lightly fry potato and carrot cubes in oil until edges are slightly browned. Remove and set aside (helps them hold shape).", "Heat oil in a large pot or Dutch oven over medium heat. Sauté onion and garlic until fragrant.", "Add chicken pieces and cook until lightly browned on all sides.", "Pour in tomato sauce, water/broth, fish sauce/soy sauce, and add the bay leaf. Bring to a simmer.", "Lower heat, cover, and cook for 15-20 minutes.", "Add potatoes and carrots (raw or pre-fried). Cover and simmer for another 15-20 minutes, or until chicken and vegetables are tender.", "Stir in bell peppers and green peas (if using). Cook for 5 more minutes until bell peppers are tender-crisp.", "Season with salt, black pepper, and optional sugar to taste. Remove bay leaf.", "Serve hot with steamed rice."]
+            }
+        ],
+        beef: [
+            {
+                name: "Beef Kaldereta",
+                time: "90 mins+",
+                difficulty: "Medium",
+                icon: "fa-solid fa-spoon",
+                desc: "A hearty Filipino beef stew in a rich, savory tomato-based sauce, often thickened with liver spread and garnished with olives and cheese.",
+                img: "https://cdn.sanity.io/images/f3knbc2s/production/f74d8aed0419d87b41895136fede06b671ed0482-2500x1500.jpg", // Image present
+                baseMeatWeight: 1000,
+                ingredients: [
+                    { text: "Large Onion, chopped", baseQty: 1, unit: "pcs" },
+                    { text: "Garlic, minced", baseQty: 6, unit: "cloves" },
+                    { text: "Tomato Sauce", baseQty: 425, unit: "ml" },
+                    { text: "Liver Spread or Pate (Reno brand is common)", baseQty: 120, unit: "ml" },
+                    { text: "Potatoes, peeled and cubed", baseQty: 2, unit: "large pcs" },
+                    { text: "Carrots, peeled and sliced thickly", baseQty: 2, unit: "medium pcs" },
+                    { text: "Red Bell Pepper, cut into squares", baseQty: 1, unit: "pcs" },
+                    { text: "Green Bell Pepper, cut into squares", baseQty: 1, unit: "pcs" },
+                    { text: "Green Olives, pitted (optional)", baseQty: 80, unit: "ml" },
+                    { text: "Bay Leaves", baseQty: 2, unit: "pcs" },
+                    { text: "Beef Broth or Water", baseQty: 480, unit: "ml" },
+                    { text: "Cooking Oil", baseQty: 45, unit: "ml" },
+                    { text: "Salt and Black Pepper", baseQty: null, unit: "to taste" },
+                    { text: "Red Pepper Flakes or chopped Chili (optional, for heat)", baseQty: 0.5, unit: "tsp" },
+                    { text: "Grated Cheese (Cheddar or Edam, for topping)", baseQty: null, unit: "to taste" }
+                ],
+                instructions: ["Pat beef cubes dry and season with salt and pepper.", "Heat oil in a large, heavy-bottomed pot or Dutch oven over medium-high heat. Sear the beef cubes in batches until browned on all sides. Remove beef and set aside.", "In the same pot, lower heat to medium. Sauté onion until softened (about 5 minutes). Add garlic and optional red pepper flakes, cook for 1 minute until fragrant.", "Stir in the liver spread and cook for 1 minute.", "Return the beef to the pot. Add tomato sauce, beef broth/water, and bay leaves. Stir well.", "Bring to a boil, then reduce heat to low, cover tightly, and simmer for 1.5 - 2.5 hours, or until the beef is very tender (check periodically and add more water/broth if it becomes too dry).", "Optional: While beef simmers, lightly fry potato and carrot cubes until edges brown. Set aside.", "Once beef is tender, add potatoes and carrots (raw or pre-fried). Cover and cook for 15-20 minutes more, or until vegetables are tender.", "Stir in bell peppers and olives (if using). Cook uncovered for another 5-7 minutes, allowing the sauce to thicken slightly.", "Remove bay leaves. Season with salt and pepper to taste. Adjust thickness if needed (can mash some potatoes or add a cornstarch slurry).", "Serve hot, topped with grated cheese if desired, with steamed rice."]
+            },
+            {
+                name: "Beef Mechado",
+                time: "90 mins+",
+                difficulty: "Medium",
+                icon: "fa-solid fa-carrot",
+                desc: "Tender beef braised in soy sauce, calamansi juice, and tomato sauce, traditionally with pork fat larding.",
+                img: "https://www.foxyfolksy.com/wp-content/uploads/2019/09/mechado-640.jpg", // Image present
+                baseMeatWeight: 1000,
+                ingredients: [
+                    { text: "Pork Fat Strips (optional, for larding)", baseQty: null, unit: "few strips (~1/4 inch thick)" },
+                    { text: "Soy Sauce", baseQty: 120, unit: "ml" },
+                    { text: "Calamansi Juice (or 50/50 Lemon/Lime Juice)", baseQty: 60, unit: "ml" },
+                    { text: "Tomato Sauce", baseQty: 225, unit: "ml" },
+                    { text: "Large Onion, sliced into rings", baseQty: 1, unit: "pcs" },
+                    { text: "Garlic, minced", baseQty: 5, unit: "cloves" },
+                    { text: "Potatoes, peeled and quartered or cut into wedges", baseQty: 2, unit: "large pcs" },
+                    { text: "Carrot, peeled and sliced thickly", baseQty: 1, unit: "large pcs" },
+                    { text: "Red Bell Pepper, cut into thick strips or squares", baseQty: 1, unit: "pcs" },
+                    { text: "Bay Leaves", baseQty: 2, unit: "pcs" },
+                    { text: "Beef Broth or Water", baseQty: 480, unit: "ml" },
+                    { text: "Cooking Oil", baseQty: 30, unit: "ml" },
+                    { text: "Salt and Black Pepper", baseQty: null, unit: "to taste" },
+                    { text: "Sugar (optional)", baseQty: 1, unit: "tsp" }
+                ],
+                instructions: ["Optional Larding: Using a sharp knife, make small incisions into the beef roast and insert strips of pork fat throughout.", "In a bowl, combine soy sauce and calamansi juice. Marinate the beef (whole or chunked) for at least 30 minutes, turning occasionally.", "Heat oil in a large pot or Dutch oven over medium-high heat. Remove beef from marinade (reserve marinade) and sear on all sides until well browned.", "Remove beef and set aside. Add onion slices to the pot and cook until softened and lightly caramelized.", "Add garlic and cook for 1 minute until fragrant.", "Return beef to the pot. Pour in the reserved marinade, tomato sauce, beef broth/water, and add bay leaves. Add optional sugar.", "Bring to a boil, then reduce heat to low, cover tightly, and simmer for 1.5 - 2.5 hours, or until beef is fork-tender. Add more water/broth if needed.", "Optional: Lightly fry potato wedges and carrot slices until edges brown. Set aside.", "Add potatoes and carrots (raw or pre-fried) to the pot. Cover and cook for 15-20 minutes until tender.", "Add the bell pepper strips and cook uncovered for another 5-7 minutes until tender-crisp and sauce has slightly thickened.", "Remove bay leaves. Season with salt and pepper to taste.", "If using a whole roast, remove and slice before serving. Spoon sauce and vegetables over the beef slices. Serve hot with steamed rice."]
+            },
+            {
+                name: "Filipino Beef Tapa",
+                time: "20 mins + Marinating",
+                difficulty: "Easy",
+                icon: "fa-solid fa-egg",
+                desc: "Thinly sliced cured beef, pan-fried until slightly crisp and caramelized. A breakfast favorite (Tapsilog).",
+                img: "https://www.foxyfolksy.com/wp-content/uploads/2017/09/beef-tapa-640.jpg", // Image present
+                baseMeatWeight: 500,
+                ingredients: [
+                    { text: "Soy Sauce", baseQty: 60, unit: "ml" },
+                    { text: "Calamansi Juice or White Vinegar", baseQty: 30, unit: "ml" },
+                    { text: "Garlic, minced", baseQty: 5, unit: "cloves" },
+                    { text: "Brown Sugar", baseQty: 15, unit: "ml" },
+                    { text: "Black Pepper, freshly ground", baseQty: 1, unit: "tsp" },
+                    { text: "Salt", baseQty: 0.5, unit: "tsp" },
+                    { text: "Cooking Oil for frying", baseQty: 45, unit: "ml" }
+                ],
+                instructions: ["In a bowl, combine marinade ingredients: soy sauce, calamansi/vinegar, garlic, brown sugar, pepper, and salt. Mix well until sugar dissolves.", "Add the thinly sliced beef to the marinade, ensuring all pieces are coated. Massage the marinade into the meat.", "Cover and refrigerate for at least 4 hours, or preferably overnight for best flavor.", "Heat cooking oil in a large frying pan or skillet over medium-high heat.", "Remove beef from the marinade, letting excess drip off slightly (don't discard marinade completely if you want saucier tapa).", "Place beef slices in the hot pan in a single layer (cook in batches if necessary to avoid overcrowding).", "Fry for 2-4 minutes per side, or until cooked through and slightly caramelized and crispy at the edges. Add a splash of leftover marinade during the last minute if desired.", "Adjust cooking time based on desired doneness (less time for rarer, more for well-done and crispier). Do not overcook, as thin slices can become tough quickly.", "Serve immediately, typically as part of 'Tapsilog' - with garlic fried rice (sinangag) and a fried egg (itlog). A side of vinegar dipping sauce or pickled papaya (atchara) is common."]
+            },
+            {
+                name: "Bistek Tagalog",
+                time: "30 mins + Marinating",
+                difficulty: "Easy",
+                icon: "fa-solid fa-lemon",
+                desc: "Thinly sliced beef braised in soy sauce and calamansi juice, smothered with onions.",
+                img: "https://www.simplyrecipes.com/thmb/0QQ-9_OkQRJOKJKDUDSCzuoI7WQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Simply-Recipes-Bistek-LEAD-01-f04a082d4a2d4474a0cdb8dec5f06b1d.jpg", // Image present
+                baseMeatWeight: 500,
+                ingredients: [
+                    { text: "Soy Sauce", baseQty: 120, unit: "ml" },
+                    { text: "Calamansi Juice (or 50/50 Lemon/Lime Juice)", baseQty: 60, unit: "ml" },
+                    { text: "Large Onions, sliced into thick rings", baseQty: 2, unit: "pcs" },
+                    { text: "Garlic, minced (optional)", baseQty: 3, unit: "cloves" },
+                    { text: "Black Pepper, freshly ground", baseQty: 0.5, unit: "tsp" },
+                    { text: "Water or Beef Broth (optional, for more sauce)", baseQty: 60, unit: "ml" },
+                    { text: "Cooking Oil", baseQty: 45, unit: "ml" },
+                    { text: "Sugar (optional, to balance flavor)", baseQty: 0.5, unit: "tsp" }
+                ],
+                instructions: ["In a bowl, combine soy sauce, calamansi juice, and black pepper. Add the beef slices and marinate for at least 30 minutes (or up to 2 hours) in the refrigerator.", "Heat about 2 tbsp of oil in a large pan or skillet over medium-high heat. Pan-fry the onion rings until lightly browned and softened, but still slightly crisp. Remove from pan and set aside.", "Add the remaining 1 tbsp oil to the pan. Remove beef slices from the marinade, reserving the marinade.", "Sear the beef slices in the hot pan (in batches if needed) for 1-2 minutes per side until browned. Remove beef and set aside.", "Optional: Sauté minced garlic in the same pan for 30 seconds until fragrant.", "Pour the reserved marinade into the pan. Add optional water/broth and sugar. Bring to a simmer, scraping up any browned bits from the bottom of the pan.", "Return the seared beef slices to the pan. Lower heat, cover, and simmer gently for 5-10 minutes, or until beef is tender (cooking time depends on the cut and thickness).", "Return most of the cooked onion rings to the pan and stir gently to combine.", "Taste and adjust seasoning if needed.", "Transfer to a serving plate, top with the remaining reserved onion rings.", "Serve immediately with hot steamed rice."]
+            }
+        ],
+         fish: [
+            {
+                name: "Sinigang na Isda",
+                time: "30 mins",
+                difficulty: "Easy",
+                icon: "fa-solid fa-fish-fins",
+                desc: "A light and sour Filipino fish soup using tamarind broth with vegetables.",
+                img: "https://www.maggi.ph/sites/default/files/styles/image_744_x_419/public/srh_recipes/48ce3132d5a437e6977cd0c6df0f094d.jpg?h=561fe1eb&itok=1tOMxI7T", // Image present
+                baseMeatWeight: 500,
+                ingredients: [
+                    { text: "Tamarind Soup Base (Sinigang Mix)", baseQty: 1, unit: "packet (approx 20-30g)" },
+                    { text: "Large Onion, quartered", baseQty: 1, unit: "pcs" },
+                    { text: "Medium Tomatoes, quartered", baseQty: 2, unit: "pcs" },
+                    { text: "Daikon Radish (Labanos), peeled and sliced", baseQty: 1, unit: "medium pcs" },
+                    { text: "String Beans (Sitaw), cut into 2-inch lengths", baseQty: 1, unit: "bundle (approx 150g)" },
+                    { text: "Okra, ends trimmed", baseQty: 8, unit: "pcs" },
+                    { text: "Water Spinach (Kangkong) or Bok Choy leaves", baseQty: 1, unit: "bundle (approx 200g)" },
+                    { text: "Finger Chilies (Siling Pangsigang, optional)", baseQty: 2, unit: "pcs" },
+                    { text: "Fish Sauce (Patis)", baseQty: null, unit: "to taste" },
+                    { text: "Water or Rice Washing (Hugas Bigas)", baseQty: 1200, unit: "ml" }
+                ],
+                instructions: ["In a pot, combine water/rice washing, onion, and tomatoes. Bring to a boil.", "Add tamarind soup base (start with less if unsure, add more later) and radish. Simmer for 5 minutes.", "Gently add the fish pieces (steaks or whole). Lower heat and simmer gently for 8-10 minutes, or until fish is just cooked through (opaque). Do not over-stir or overcook the fish.", "Add string beans, okra, and finger chilies (if using). Cook for 3-5 minutes until vegetables are tender-crisp.", "Add water spinach or bok choy and cook for 1 minute until just wilted.", "Season carefully with fish sauce (patis) to taste. Be gentle when stirring.", "Serve immediately in bowls, ensuring each serving gets fish, broth, and vegetables."]
+            },
+            {
+                name: "Paksiw na Isda",
+                time: "25 mins",
+                difficulty: "Easy",
+                icon: "fa-solid fa-fish",
+                desc: "Fish simmered gently in vinegar, garlic, ginger, and peppercorns, often with vegetables like eggplant or bitter gourd.",
+                img: "https://www.maggi.ph/sites/default/files/styles/home_stage_1500_700/public/srh_recipes/41b263bf239ea5e6125956c96bca84a4.jpg?h=28121b77&itok=EZuzNQDe", // Image present
+                baseMeatWeight: 500,
+                ingredients: [
+                    { text: "White Vinegar (Cane or Coconut)", baseQty: 180, unit: "ml" },
+                    { text: "Water", baseQty: 120, unit: "ml" },
+                    { text: "Garlic, crushed", baseQty: 6, unit: "cloves" },
+                    { text: "Ginger, sliced", baseQty: 1, unit: "thumb-sized pc" },
+                    { text: "Whole Peppercorns", baseQty: 1, unit: "tsp" },
+                    { text: "Finger Chilies (Siling Pangsigang)", baseQty: 3, unit: "pcs" },
+                    { text: "Fish Sauce (Patis) or Salt", baseQty: null, unit: "to taste" },
+                    { text: "Eggplant (Talbos), sliced (Optional)", baseQty: 1, unit: "small pcs" },
+                    { text: "Bitter Gourd (Ampalaya), sliced (Optional)", baseQty: 0.5, unit: "small pcs" }
+                ],
+                instructions: ["Arrange optional vegetables (eggplant, bitter gourd) at the bottom of a pot if using.", "Place the fish on top of the vegetables (or directly in the pot).", "Add vinegar, water, garlic, ginger, peppercorns, and finger chilies.", "Bring the mixture to a boil over medium-high heat *without covering* the pot (allows sharp vinegar smell to dissipate).", "Once boiling, lower the heat, cover the pot, and simmer gently for 15-20 minutes, or until the fish is cooked through and vegetables (if used) are tender.", "Season with fish sauce (patis) or salt to taste during the last few minutes of cooking. Adjust liquid if needed (some prefer more sauce, some less).", "Serve hot with steamed rice."]
+            },
+            {
+                name: "Fish Kinilaw",
+                time: "20 mins + Marinating",
+                difficulty: "Easy",
+                icon: "fa-regular fa-lemon",
+                desc: "Filipino ceviche where fresh, raw fish is 'cooked' (denatured) by the acidity of vinegar or citrus juice.",
+                img: "https://nutriasia.com/wp-content/uploads/2018/10/kinilawThumb.jpg", // Image present
+                baseMeatWeight: 500,
+                ingredients: [
+                    { text: "Coconut Vinegar or Cane Vinegar (Sukang Tuba or Paombong preferred)", baseQty: 180, unit: "ml" },
+                    { text: "Calamansi or Lime Juice (optional, adds brightness)", baseQty: 30, unit: "ml" },
+                    { text: "Red Onion, chopped finely", baseQty: 1, unit: "medium pcs" },
+                    { text: "Ginger, minced or julienned finely", baseQty: 1.5, unit: "thumb-sized pcs" },
+                    { text: "Red Chili Peppers (Siling Labuyo), chopped finely", baseQty: 3, unit: "pcs" },
+                    { text: "Salt", baseQty: 1, unit: "tsp" },
+                    { text: "Black Pepper, freshly ground", baseQty: 0.5, unit: "tsp" },
+                    { text: "Cucumber, seeded and chopped small (Optional)", baseQty: 0.5, unit: "medium pcs" },
+                    { text: "Green Bell Pepper, chopped small (Optional)", baseQty: 0.5, unit: "pcs" },
+                    { text: "Coconut Milk or Cream (Optional, Visayan style 'Sinuglaw' often includes it)", baseQty: 60, unit: "ml" }
+                ],
+                instructions: ["Ensure fish is very fresh and suitable for raw consumption. Cut into uniform bite-sized cubes (approx 1/2 to 3/4 inch).", "Wash the fish cubes gently in cold water and drain very thoroughly. Pat dry gently if needed.", "In a non-metallic bowl (glass or ceramic), combine the fish cubes, vinegar, calamansi/lime juice (if using), red onion, ginger, and chili peppers.", "Mix gently but thoroughly to ensure all fish pieces are coated with the acidic liquid.", "Season with salt and pepper. Mix again gently.", "Cover the bowl and refrigerate for at least 30 minutes, or up to 1 hour. The acid will 'cook' the fish, turning it opaque.", "Check fish after 30 mins - it should be opaque on the outside and slightly translucent inside (adjust time based on preference, longer time 'cooks' it more).", "Just before serving, stir in optional cucumber and/or bell pepper.", "For Visayan style: You can drain *some* (not all) of the initial vinegar marinade after 'cooking' and stir in fresh coconut milk or cream. Mix gently.", "Taste and adjust seasoning (salt, pepper, maybe more chili or calamansi) if necessary.", "Serve chilled as an appetizer or main dish."]
+            },
+            {
+                name: "Sweet and Sour Fish (Escabeche)",
+                time: "35 mins",
+                difficulty: "Medium",
+                icon: "fa-solid fa-fish-fins",
+                desc: "Whole fried fish smothered in a colorful sweet and sour sauce with bell peppers, onions, and carrots.",
+                img: "https://www.foxyfolksy.com/wp-content/uploads/2014/04/escabeche-640.jpg", // Image present
+                baseMeatWeight: 750,
+                ingredients: [
+                    { text: "Whole Fish, cleaned, scaled, scored", baseQty: 1, unit: "pcs (~750g)" },
+                    { text: "Salt and Pepper (for seasoning fish)", baseQty: null, unit: "to taste" },
+                    { text: "All-Purpose Flour or Cornstarch (for dredging)", baseQty: 60, unit: "ml" },
+                    { text: "Cooking Oil for frying", baseQty: null, unit: "enough for shallow or deep frying" },
+                    { text: "White Vinegar", baseQty: 120, unit: "ml" },
+                    { text: "Water", baseQty: 120, unit: "ml" },
+                    { text: "Brown Sugar", baseQty: 120, unit: "ml" },
+                    { text: "Ketchup (optional, for color and tang)", baseQty: 30, unit: "ml" },
+                    { text: "Soy Sauce or Fish Sauce (optional, for umami)", baseQty: 15, unit: "ml" },
+                    { text: "Medium Onion, sliced", baseQty: 1, unit: "pcs" },
+                    { text: "Garlic, minced", baseQty: 3, unit: "cloves" },
+                    { text: "Ginger, julienned", baseQty: 1, unit: "thumb-sized pc" },
+                    { text: "Carrot, julienned", baseQty: 1, unit: "small pcs" },
+                    { text: "Red Bell Pepper, julienned", baseQty: 0.5, unit: "pcs" },
+                    { text: "Green Bell Pepper, julienned", baseQty: 0.5, unit: "pcs" },
+                    { text: "Cornstarch Slurry (1 tbsp cornstarch + 2 tbsp water)", baseQty: 1, unit: "batch" },
+                    { text: "Cooking Oil (for sauce)", baseQty: 15, unit: "ml" }
+                ],
+                instructions: ["Pat the whole fish completely dry. Season inside and out with salt and pepper.", "Lightly dredge the fish in flour or cornstarch, shaking off excess.", "Heat enough oil in a large frying pan or wok for shallow or deep frying over medium-high heat.", "Carefully fry the fish until golden brown, crispy, and cooked through (about 5-8 minutes per side, depending on size).", "Remove fish from pan and drain on paper towels or a wire rack. Place on a serving platter.", "Prepare the sauce: In a separate saucepan or wok, heat 1 tbsp oil over medium heat.", "Sauté ginger, garlic, and onion until fragrant.", "Add julienned carrots and bell peppers. Stir-fry for 1-2 minutes until slightly softened but still crisp.", "In a small bowl, whisk together vinegar, water, brown sugar, optional ketchup, and optional soy/fish sauce.", "Pour the mixture into the saucepan with the vegetables. Bring to a simmer.", "Give the cornstarch slurry a quick stir and pour it into the simmering sauce, whisking constantly until the sauce thickens slightly (cook for about 1 minute).", "Taste the sauce and adjust sweetness, sourness, or saltiness if needed.", "Pour the hot sweet and sour sauce generously over the fried fish on the serving platter.", "Garnish with extra fresh onion rings or chopped green onions if desired.", "Serve immediately with steamed rice."]
+            }
+        ]
+    };
+    // ========================================================================
+    // == END OF RECIPE DATA ==================================================
+    // ========================================================================
 
-/* Combined weight input */
-.weight-input-group .weight-input-container { display: flex; gap: 0; align-items: stretch; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease; overflow: hidden; }
-.weight-input-group .weight-input-container:focus-within { border-color: var(--secondary-color); box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.1); }
-.weight-input-group .weight-input-container input[type="number"] { flex-grow: 1; width: auto; border: none; border-radius: 0; box-shadow: none; padding-right: 10px; background-color: transparent; }
-.weight-input-group .unit-select-wrapper { flex-shrink: 0; width: 90px; position: relative; border-left: 1px solid var(--border-color); }
-.weight-input-group .unit-select-wrapper select { width: 100%; height: 100%; padding: 16px 35px 16px 15px; border: none; border-radius: 0; box-shadow: none; background-color: #fdfdfd; cursor: pointer; }
-.weight-input-group .unit-select-wrapper::after { right: 15px; }
+    // --- Helper Functions & State ---
+    const POUND_TO_GRAM = 453.592;
+    const SCALABLE_UNITS = ['g', 'kg', 'ml', 'l', 'oz', 'cup', 'tbsp', 'tsp', 'pcs', 'cloves', 'can'];
+    const SMALL_UNITS = ['tsp', 'tbsp'];
+    const COUNT_UNITS = ['pcs', 'cloves', 'leaves', 'stalks'];
+    const NON_SCALABLE_UNITS_STRICT = ['head', 'bundle', 'packet', 'pinch', 'handful', 'thumb-sized', 'thumb', 'batch'];
+    const DESCRIPTIVE_UNITS = ['to taste', 'enough to cover', 'enough for deep frying', "can's worth", "few strips", 'loosely packed'];
 
-/* --- Validation Styles --- */
-.error-message { display: block; color: var(--error-color); font-size: 0.85rem; font-weight: 500; margin-top: 8px; min-height: 1.2em; opacity: 0; transition: opacity var(--transition-speed) ease; padding-left: 5px; }
-.input-group:has(.input-error) .error-message { opacity: 1; }
-.error-message:not(:empty) { opacity: 1; }
-input.input-error, select.input-error { border-color: var(--error-color) !important; background-color: var(--error-background) !important; }
-.weight-input-container.input-error { border-color: var(--error-color) !important; }
-.weight-input-container.input-error input, .weight-input-container.input-error select { background-color: var(--error-background) !important; }
-.input-group:has(select.input-error) .select-wrapper::after { color: var(--error-color); }
-input.input-error:focus, select.input-error:focus { box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.15) !important; border-color: var(--error-color) !important; }
-.weight-input-container.input-error:focus-within { box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.15) !important; border-color: var(--error-color) !important; }
+    let recipeSwiperInstance = null;
+    let portionGrams = 0;
+    let currentMeatWeightGrams = 0;
+    let lastFocusedElement;
 
-/* --- Button --- */
-.button { border: none; padding: 16px 30px; border-radius: var(--border-radius-md); font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all var(--transition-speed) ease; display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; letter-spacing: 0.5px; }
-.primary-button { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; width: 100%; margin-top: 20px; box-shadow: 0 6px 20px rgba(192, 57, 43, 0.28); }
-.primary-button:hover:not(:disabled) { background: linear-gradient(135deg, var(--primary-dark), var(--primary-color)); transform: translateY(-3px); box-shadow: 0 9px 28px rgba(192, 57, 43, 0.38); }
-.primary-button:active:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(192, 57, 43, 0.3); }
-.primary-button:disabled { background: var(--text-light); cursor: not-allowed; box-shadow: none; transform: none; opacity: 0.6; }
-.primary-button .fa-spinner { animation: spin 1s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    /** Calculates scrollbar width and sets CSS variable */
+    const calculateScrollbarWidth = () => {
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+    };
 
-/* --- Loading Indicators --- */
-.loading-indicator { display: flex; align-items: center; justify-content: center; padding: 30px; font-size: 1rem; color: var(--text-medium); gap: 10px; text-align: center; width: 100%; opacity: 0.8; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 5; background: rgba(255, 255, 255, 0.8); border-radius: var(--border-radius-md); }
-.loading-indicator i { font-size: 1.4em; color: var(--primary-color); }
-.loading-indicator.hidden { display: none; }
-/* Specific positioning for results loading */
-.results-wrapper .loading-indicator { position: absolute; }
-/* Specific positioning for recipe loading */
-.suggestion-carousel-container .loading-indicator { position: absolute; top: 40%; }
+    /** Converts various weight units to grams. */
+    const convertToGrams = (value, unit) => {
+        if (isNaN(value) || value <= 0) return 0;
+        switch (unit.toLowerCase()) {
+            case 'kg': return value * 1000;
+            case 'lbs': return value * POUND_TO_GRAM;
+            case 'g': default: return value;
+        }
+    };
 
-/* --- Results Card --- */
-.results-wrapper { min-height: 280px; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity var(--transition-speed) ease; flex-grow: 1; position: relative; }
-.placeholder-result { text-align: center; color: var(--text-light); padding: 30px; transition: opacity 0.3s ease; }
-.placeholder-result i { font-size: 3.2rem; margin-bottom: 20px; display: block; opacity: 0.5; color: var(--secondary-color); }
-.result-list { list-style: none; width: 100%; opacity: 0; transition: opacity 0.5s ease 0.1s; padding-top: 15px; }
-.result-list.visible { opacity: 1; }
-.result-item { padding: 18px 10px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; gap: 20px; transition: background-color 0.2s ease; }
-.result-item:last-child { border-bottom: none; }
-.result-item:hover { background-color: #fdfdfe; }
-.result-item:first-child { background-color: #FEF9E7; margin: 0 -10px 10px; padding: 18px 20px; border-radius: var(--border-radius-md); border-bottom: 1px solid #FAD7A0; }
-.result-label { font-weight: 500; color: var(--text-medium); display: flex; align-items: center; gap: 14px; flex-shrink: 0; font-size: 0.98rem; }
-.result-label i { width: 22px; text-align: center; color: var(--secondary-color); font-size: 1.25em; opacity: 0.9; }
-.result-item:first-child .result-label { color: var(--text-dark); font-weight: 600; font-size: 1.05rem; }
-.result-item:first-child .result-value { font-size: 1.3rem; color: var(--primary-dark); }
-.result-item:first-child .result-label i { color: var(--primary-color); }
-.result-value { font-weight: 500; color: var(--text-dark); font-size: 1rem; text-align: right; }
+    /** Formats a scaled quantity for display. */
+    const formatQuantity = (quantity, unit) => {
+        if (quantity === null || isNaN(quantity) || quantity <= 0) return "";
+        const u = unit ? unit.toLowerCase() : "";
 
-/* --- Recipe Suggestions --- */
-.recipe-suggestions { margin-top: 70px; padding-top: 30px; margin-bottom: 80px; position: relative; }
-.suggestion-carousel-container { position: relative; padding: 0 50px; opacity: 0; transition: opacity 0.5s ease; min-height: 450px; /* Adjust based on content */ }
-.suggestion-carousel-container.visible { opacity: 1; }
+        if (DESCRIPTIVE_UNITS.includes(u)) return "";
+        if (quantity < 0.1) return "";
 
-/* Swiper Specific Styles */
-.recipe-swiper { width: 100%; padding-top: 10px; padding-bottom: 55px; overflow: visible; }
-.swiper-slide { height: auto; display: flex; padding: 10px; }
-.suggestion-card {
-    width: 100%; background: var(--card-background); border-radius: var(--border-radius-lg); border: 1px solid var(--border-color); overflow: hidden; transition: box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease, border-color var(--transition-speed) ease; display: flex; flex-direction: column; box-shadow: 0 10px 30px var(--shadow-light); cursor: pointer;
-}
-.swiper-slide:hover .suggestion-card, .swiper-slide .suggestion-card:focus-within {
-     box-shadow: 0 15px 45px var(--shadow-hover); border-color: var(--secondary-color); transform: translateY(-6px) scale(1.01); z-index: 2;
-}
-.swiper-slide .suggestion-card:focus { outline: none; }
+        if (SMALL_UNITS.includes(u)) {
+            const fractions = { '0.25': '¼', '0.5': '½', '0.75': '¾' };
+            const whole = Math.floor(quantity);
+            const decimal = quantity - whole;
+            let fractionStr = "";
+            if (decimal >= 0.18 && decimal < 0.4) fractionStr = fractions['0.25']; // ~1/4
+            else if (decimal >= 0.4 && decimal < 0.65) fractionStr = fractions['0.5']; // ~1/2
+            else if (decimal >= 0.65 && decimal < 0.87) fractionStr = fractions['0.75']; // ~3/4
+            else if (decimal >= 0.87) { // Round up near whole
+                 return (whole + 1).toString();
+            }
+            const wholeStr = whole > 0 ? whole.toString() : "";
+            return `${wholeStr}${wholeStr && fractionStr ? ' ' : ''}${fractionStr}`.trim() || "";
+        }
 
-.suggestion-img-container { height: 190px; background-color: var(--border-color); overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; }
-.suggestion-img-container img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease, filter 0.3s ease; }
-.swiper-slide:hover .suggestion-img-container img { transform: scale(1.08); filter: brightness(1.03); }
-.suggestion-content { padding: 25px 30px; flex-grow: 1; display: flex; flex-direction: column; }
-.suggestion-name { font-weight: 700; font-family: var(--font-heading); font-size: 1.35rem; color: var(--text-dark); margin-bottom: 12px; line-height: 1.35; }
-.suggestion-desc { font-size: 0.92rem; color: var(--text-medium); line-height: 1.7; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: calc(1.7em * 3); }
-.suggestion-tags { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; margin-top: auto; }
-.tag { background-color: #F4F6F6; color: var(--text-medium); font-size: 0.8rem; font-weight: 500; padding: 5px 14px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-.tag i { font-size: 0.9em; opacity: 0.8; }
-.tag.difficulty-easy { background-color: #E8F8F5; color: #1ABC9C; }
-.tag.difficulty-medium { background-color: #FEF9E7; color: #F39C12; }
-.tag.difficulty-hard { background-color: #FDEDEC; color: #E74C3C; }
+        if (COUNT_UNITS.includes(u)) {
+             if (quantity < 1) {
+                 if (quantity < 0.4) return ""; // Less than ~half
+                 return "½"; // Round to half
+             }
+             const rounded = Math.round(quantity);
+             return rounded > 0 ? rounded.toString() : "";
+        }
 
-.suggestion-action { border-top: 1px solid var(--border-color); padding: 18px 30px; margin-top: auto; text-align: right; background-color: #fdfdfe; border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg); }
-.view-recipe-link { color: var(--primary-color); font-weight: 600; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: color var(--transition-speed) ease, gap var(--transition-speed) ease; }
-.view-recipe-link i { transition: transform 0.3s ease; }
-.swiper-slide:hover .view-recipe-link, .swiper-slide .suggestion-card:focus-within .view-recipe-link { color: var(--primary-dark); gap: 12px; }
-.swiper-slide:hover .view-recipe-link i, .swiper-slide .suggestion-card:focus-within .view-recipe-link i { transform: translateX(4px); }
+        if (u === 'can') {
+             const rounded = Math.round(quantity * 2) / 2;
+             if (rounded < 0.5) return "";
+             if (rounded === 0.5) return "½";
+             return rounded % 1 === 0 ? rounded.toString() : `${Math.floor(rounded)}½`;
+        }
 
-/* Swiper Navigation Buttons Styling */
-.recipe-swiper-prev, .recipe-swiper-next {
-    position: absolute; top: 50%; transform: translateY(-70%); width: 48px; height: 48px; background-color: rgba(255, 255, 255, 0.95); border-radius: 50%; box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12); z-index: 10; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--primary-color); transition: all 0.3s ease;
-}
-.recipe-swiper-prev { left: 5px; }
-.recipe-swiper-next { right: 5px; }
-.recipe-swiper-prev::after, .recipe-swiper-next::after { font-size: 1.3rem; font-weight: 900; }
-.recipe-swiper-prev:hover, .recipe-swiper-next:hover { background-color: var(--primary-color); color: white; box-shadow: 0 7px 22px rgba(0, 0, 0, 0.18); }
-.recipe-swiper-prev.swiper-button-disabled, .recipe-swiper-next.swiper-button-disabled { opacity: 0.3; cursor: auto; pointer-events: none; box-shadow: none; }
+        if (quantity < 1) return quantity.toFixed(1);
+        if (quantity < 10 && quantity % 1 !== 0) return quantity.toFixed(1);
+        return Math.round(quantity).toString();
+    };
 
-/* Swiper Pagination Styling */
-.recipe-swiper-pagination { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: auto !important; z-index: 10; }
-.recipe-swiper-pagination .swiper-pagination-bullet { width: 11px; height: 11px; background-color: var(--text-light); opacity: 0.4; border-radius: 50%; transition: all 0.3s ease; margin: 0 6px !important; }
-.recipe-swiper-pagination .swiper-pagination-bullet-active { background-color: var(--primary-color); opacity: 1; transform: scale(1.25); }
+    /** Validates number input field. */
+    const validateInput = (input, errorMessage) => {
+        clearError(input);
+        const value = parseFloat(input.value);
+        if (input.value.trim() === '' || isNaN(value) || value <= 0) {
+            showError(input, errorMessage);
+            return false;
+        }
+        return true;
+    };
 
-.placeholder-message {
-    width: 90%; max-width: 550px; margin: 40px auto; text-align: center; color: var(--text-light); padding: 40px; font-style: italic; font-size: 1.1rem; border: 2px dashed var(--border-color); border-radius: var(--border-radius-md); background-color: rgba(255, 255, 255, 0.7); transition: opacity 0.3s ease, visibility 0s linear 0.3s, height 0.3s ease, margin 0.3s ease, padding 0.3s ease, border 0.3s ease;
-}
-.placeholder-message.hidden { opacity: 0; visibility: hidden; height: 0; margin: 0 auto; padding: 0; border: none; pointer-events: none; }
+    /** Shows error message for an input field. */
+    const showError = (input, message) => {
+        input.classList.add('input-error');
+        const parentGroup = input.closest('.input-group');
+        const errorElement = parentGroup?.querySelector('.error-message');
+        if (input.id === 'meatWeight') { input.closest('.weight-input-container')?.classList.add('input-error'); meatWeightUnitSelect.classList.add('input-error'); }
+        else if (input.tagName === 'SELECT') { input.closest('.select-wrapper')?.classList.add('input-error'); }
+        if (errorElement) { errorElement.textContent = message; errorElement.style.opacity = '1'; }
+    };
 
-/* --- Footer --- */
-.site-footer { margin-top: 100px; background-color: var(--text-dark); color: var(--text-light); padding: 60px 0; font-size: 0.95rem; }
-.footer-content { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 30px; }
-.footer-logo { display: flex; align-items: center; gap: 12px; color: var(--background-color); }
-.footer-logo .logo-icon { color: var(--secondary-color); font-size: 1.8rem; }
-.footer-logo .logo-text { font-size: 1.5rem; color: var(--background-color); }
-.footer-logo .logo-text sup { color: var(--accent-color); }
-.footer-links { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 15px; }
-.footer-link { color: var(--text-light); text-decoration: none; transition: color var(--transition-speed) ease; display: inline-flex; align-items: center; }
-.footer-link:hover { color: var(--background-color); }
-.footer-separator { color: var(--text-medium); margin: 0 5px; user-select: none; opacity: 0.5; }
-.report-issue-link i { margin-right: 7px; font-size: 0.9em; opacity: 0.8; }
-.report-issue-link:hover { color: var(--accent-color); }
-.footer-copyright { width: 100%; text-align: center; margin-top: 35px; padding-top: 30px; border-top: 1px solid rgba(133, 146, 158, 0.25); color: var(--text-light); font-size: 0.9rem; opacity: 0.7; }
+    /** Clears error message for an input field. */
+    const clearError = (input) => {
+        input.classList.remove('input-error');
+        const parentGroup = input.closest('.input-group');
+        const errorElement = parentGroup?.querySelector('.error-message');
+        if (input.id === 'meatWeight') { input.closest('.weight-input-container')?.classList.remove('input-error'); meatWeightUnitSelect.classList.remove('input-error'); }
+        else if (input.tagName === 'SELECT') { input.closest('.select-wrapper')?.classList.remove('input-error'); }
+        if (errorElement) { errorElement.textContent = ''; errorElement.style.opacity = '0'; }
+    };
 
-/* --- Utility --- */
-.hidden { display: none !important; }
+    /** Calculates the number of servings. */
+    const calculateServings = (totalGrams, portionGrams) => {
+        if (portionGrams <= 0 || totalGrams <=0 ) return 0;
+        return Math.floor(totalGrams / portionGrams);
+    };
 
-/* --- Recipe Modal --- */
-.recipe-modal { position: fixed; inset: 0; z-index: 1050; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s; padding: 20px; }
-.recipe-modal.active { opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
-.modal-overlay { position: absolute; inset: 0; background-color: rgba(33, 47, 60, 0.8); backdrop-filter: blur(5px); cursor: pointer; }
-.modal-content { position: relative; background: var(--card-background); border-radius: var(--border-radius-lg); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); z-index: 1051; width: 100%; max-width: 850px; max-height: 90vh; overflow-y: auto; padding: 45px 55px; transform: scale(0.9) translateY(15px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; opacity: 0; }
-.recipe-modal.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
-.modal-close-btn { position: absolute; top: 20px; right: 20px; background: transparent; border: none; font-size: 1.9rem; color: var(--text-light); cursor: pointer; padding: 5px; line-height: 1; transition: color 0.2s ease, transform 0.2s ease; z-index: 1052; opacity: 0.8; }
-.modal-close-btn:hover { color: var(--primary-color); transform: scale(1.15) rotate(90deg); }
-.modal-close-btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(86, 101, 115, 0.4); border-radius: 50%; color: var(--primary-color); }
+    /** Gets cooking recommendations. */
+    const getRecommendations = (meatType) => recommendationsData[meatType] || { cooking: 'N/A', time: 'N/A', seasoning: 'N/A' };
 
-.modal-body { padding-bottom: 30px; }
-.modal-image-container { width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--border-radius-md); background-color: var(--border-color); margin-bottom: 35px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); position: relative; }
-.modal-image-container img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; transition: opacity 0.3s ease; }
-.modal-image-placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: auto; color: var(--text-light); opacity: 0.5; display: none; }
-.modal-image-container img:not([src]) + .modal-image-placeholder, .modal-image-container img[src=""] + .modal-image-placeholder { display: block; }
-/* Handle error directly in JS now */
+    /** Displays calculation results. */
+    const displayResults = (servings, recommendations) => {
+        resultLoadingIndicator.classList.add('hidden');
+        resultPlaceholder.classList.add('hidden');
+        resultList.innerHTML = '';
 
-.modal-title { font-size: 2.3rem; margin-bottom: 20px; line-height: 1.3; color: var(--primary-dark); font-family: var(--font-heading); text-align: center; max-width: 90%; margin-left: auto; margin-right: auto; }
-.modal-description { font-size: 1.1rem; margin-bottom: 45px; line-height: 1.8; color: var(--text-medium); text-align: center; max-width: 90%; margin-left: auto; margin-right: auto; }
-.modal-details-grid { display: grid; grid-template-columns: 1fr; gap: 45px; margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--border-color); }
-.modal-details-grid > div { padding-bottom: 15px; }
-.modal-details-grid h4 { font-size: 1.4rem; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); font-family: var(--font-primary); font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 14px; }
-.modal-details-grid h4 i { color: var(--secondary-color); font-size: 1.2em; width: 24px; text-align: center; }
-.modal-ingredients-list { padding-top: 10px; list-style: none; padding-left: 10px; margin: 0; }
-.modal-ingredients-list li { margin-bottom: 15px; font-size: 1rem; line-height: 1.8; color: var(--text-medium); padding-left: 18px; position: relative; }
-.modal-ingredients-list li::before { content: "•"; color: var(--secondary-color); font-weight: bold; display: inline-block; width: 1em; margin-left: -1.3em; font-size: 1.2em; position: absolute; left: 0.6em; top: 2px; }
-.modal-ingredients-list li strong { color: var(--text-dark); font-weight: 600; margin-right: 10px; display: inline-block; min-width: 65px; }
-.modal-ingredients-list em { font-style: italic; color: var(--text-light); font-size: 0.9em; }
-.modal-ingredients-list hr { border: none; border-top: 1px dashed var(--border-color); margin: 18px 0 18px -18px; }
-.modal-instructions-list { padding-top: 10px; list-style: none; padding-left: 10px; margin: 0; counter-reset: instruction-counter; }
-.modal-instructions-list li { margin-bottom: 18px; font-size: 1rem; line-height: 1.85; position: relative; padding-left: 40px; color: var(--text-medium); counter-increment: instruction-counter; }
-.modal-instructions-list li::before { content: counter(instruction-counter); background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); color: white; font-size: 0.85em; font-weight: 700; border-radius: 50%; width: 2em; height: 2em; display: flex; align-items: center; justify-content: center; position: absolute; left: 0px; top: 6px; box-shadow: 0 3px 8px rgba(230, 126, 34, 0.35); }
+        const servingsText = servings > 0 ? `${servings} ${servings === 1 ? "serving" : "servings"}` : "Less than 1 serving";
+        const formattedPortion = portionGrams % 1 === 0 ? portionGrams.toString() : portionGrams.toFixed(1);
 
-/* --- Body scroll lock --- */
-body.modal-open { overflow: hidden; padding-right: var(--scrollbar-width, 15px); }
-body:not(.modal-open) { padding-right: 0 !important; } /* Remove padding when modal is closed */
+        const items = [
+            { icon: 'fa-solid fa-users', label: 'Approx. Servings', value: servingsText },
+            { icon: 'fa-solid fa-utensils', label: 'Serving Size Used', value: `${formattedPortion}g / person` },
+            { icon: 'fa-solid fa-fire-burner', label: 'Suggested Methods', value: recommendations.cooking },
+            { icon: 'fa-solid fa-clock', label: 'Est. Cooking Time', value: recommendations.time },
+            { icon: 'fa-solid fa-mortar-pestle', label: 'Seasoning Ideas', value: recommendations.seasoning },
+        ];
 
-/* --- Responsive Design --- */
-@media (max-width: 1024px) {
-    .calculator-container { grid-template-columns: 1fr; gap: 40px; }
-    .result-card { margin-top: 0; }
-    .suggestion-carousel-container { padding: 0 40px; min-height: 420px; }
-    .recipe-swiper-prev { left: -10px; }
-    .recipe-swiper-next { right: -10px; }
-}
-@media (min-width: 768px) { /* Modal grid side-by-side */
-    .modal-details-grid { grid-template-columns: 0.8fr 1.2fr; gap: 50px; }
-}
-@media (max-width: 768px) {
-    html { font-size: 15px; }
-    .container { padding: 0 15px; }
-    .hero-section { padding: 80px 0; margin-bottom: 60px; }
-    h1 { font-size: 2.6rem; }
-    h2 { font-size: 2.1rem; }
-    .main-nav ul { display: none; }
-    .card { padding: 30px 25px; }
-    .suggestion-carousel-container { padding: 0 10px; min-height: 400px; }
-    .recipe-swiper-prev, .recipe-swiper-next { width: 40px; height: 40px; top: 45%; }
-    .recipe-swiper-prev::after, .recipe-swiper-next::after { font-size: 1.1rem; }
-    .recipe-swiper-prev { left: -15px; }
-    .recipe-swiper-next { right: -15px; }
-    .recipe-swiper { padding-bottom: 45px; }
-    .recipe-swiper-pagination .swiper-pagination-bullet { width: 9px; height: 9px; }
-    .footer-content { flex-direction: column; text-align: center; }
-    .footer-links { margin: 20px 0; }
-    .modal-content { padding: 30px 25px; max-width: 94%; }
-    .modal-title { font-size: 2rem; }
-    .modal-description { font-size: 1rem; max-width: 95%; }
-    body.modal-open { padding-right: 0; }
-}
+        items.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'result-item';
+            li.innerHTML = `<span class="result-label"><i class="${item.icon}"></i> ${item.label}</span> <span class="result-value">${item.value}</span>`;
+            resultList.appendChild(li);
+        });
 
-@media (max-width: 576px) {
-    html { font-size: 14.5px; }
-    .hero-section { padding: 60px 0; }
-    h1 { font-size: 2.2rem; }
-    .subtitle { font-size: 1.1rem; }
-    .cta-button { padding: 15px 35px; font-size: 1.05rem; }
-    .card { padding: 25px 20px; border-radius: var(--border-radius-md); }
-    .section-heading { margin-bottom: 45px; padding-bottom: 15px; font-size: 1.9rem; }
-    .section-heading::after { width: 70px; height: 3px; }
-    .result-item { flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 5px; }
-    .result-value { text-align: left; }
-    .result-item:first-child { padding: 16px 15px; }
-    .suggestion-carousel-container { padding: 0 5px; min-height: 380px; }
-    .recipe-swiper-prev, .recipe-swiper-next { display: none; }
-    .recipe-swiper { padding-bottom: 40px; overflow: hidden; }
-    .recipe-swiper-pagination { bottom: 5px; }
-    .swiper-slide { padding: 5px; }
-    .suggestion-card { box-shadow: 0 8px 25px var(--shadow-light); border-radius: var(--border-radius-md); }
-    .suggestion-img-container { height: 170px; border-radius: var(--border-radius-md) var(--border-radius-md) 0 0; }
-    .suggestion-content { padding: 20px; }
-    .suggestion-name { font-size: 1.25rem; }
-    .suggestion-desc { font-size: 0.9rem; -webkit-line-clamp: 2; min-height: calc(1.7em * 2); margin-bottom: 18px; }
-    .suggestion-tags { gap: 8px; margin-bottom: 20px; }
-    .tag { font-size: 0.78rem; padding: 4px 12px; }
-    .view-recipe-link { font-size: 0.9rem; }
-    .footer-links { gap: 10px; }
-    .footer-separator { margin: 0 4px; }
-    .recipe-modal { padding: 10px; }
-    .modal-content { padding: 25px 20px; max-height: 92vh; border-radius: var(--border-radius-md); }
-    .modal-image-container { margin-bottom: 25px; aspect-ratio: 4 / 3; }
-    .modal-title { font-size: 1.7rem; }
-    .modal-description { font-size: 0.95rem; margin-bottom: 30px; max-width: 100%; }
-    .modal-details-grid { gap: 30px; margin-top: 30px; padding-top: 30px; }
-    .modal-details-grid h4 { font-size: 1.2rem; margin-bottom: 18px; }
-    .modal-ingredients-list li, .modal-instructions-list li { font-size: 0.95rem; line-height: 1.75; margin-bottom: 12px; }
-    .modal-ingredients-list li { padding-left: 15px; }
-    .modal-ingredients-list li strong { min-width: 55px;}
-    .modal-ingredients-list li::before { top: 3px; }
-    .modal-instructions-list li { padding-left: 35px; }
-    .modal-instructions-list li::before { top: 6px; width: 1.8em; height: 1.8em; line-height: 1.8em;}
-    .modal-close-btn { top: 15px; right: 15px; font-size: 1.6rem; }
+        resultList.classList.remove('hidden');
+        resultsWrapper.style.minHeight = 'auto';
+        void resultList.offsetWidth;
+        resultList.classList.add('visible');
+    };
 
-    /* Responsive weight input stacking */
-    .weight-input-group .weight-input-container { flex-direction: column; gap: 0; border: none; overflow: visible; }
-    .weight-input-group .weight-input-container input[type="number"] { width: 100%; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); margin-bottom: 12px; }
-    .weight-input-group .unit-select-wrapper { width: 100%; border-left: none; }
-    .weight-input-group .unit-select-wrapper select { border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--card-background); }
-    .weight-input-container.input-error { border: none !important; }
-    .weight-input-container.input-error input, .weight-input-container.input-error select { border-color: var(--error-color) !important; background-color: var(--error-background) !important; }
-}
+    // --- Modal Functions ---
+    /** Opens the recipe modal with scaled ingredients. */
+    const openRecipeModal = (recipe) => {
+        if (!recipe || !recipe.ingredients) {
+             console.error("Recipe data missing for modal:", recipe);
+             alert("Sorry, recipe details could not be loaded.");
+             return;
+        }
+        lastFocusedElement = document.activeElement;
+
+        let scalingFactor = 1;
+        const baseWeight = recipe.baseMeatWeight;
+        if (baseWeight && baseWeight > 0 && currentMeatWeightGrams && currentMeatWeightGrams > 0) {
+            scalingFactor = currentMeatWeightGrams / baseWeight;
+        } else {
+             console.warn("Using base recipe amounts due to missing weights.");
+        }
+
+        // Reset image state before setting new src
+        modalRecipeImage.src = ''; // Clear previous src
+        modalRecipeImage.style.opacity = '0'; // Hide image initially
+        modalImagePlaceholder.style.display = 'none'; // Hide placeholder initially
+
+        modalRecipeImage.alt = recipe.name || 'Recipe Image';
+        modalRecipeImage.onerror = () => {
+             modalRecipeImage.style.opacity = '0'; // Keep hidden on error
+             modalImagePlaceholder.style.display = 'block'; // Show placeholder SVG
+        };
+        modalRecipeImage.onload = () => {
+             modalImagePlaceholder.style.display = 'none'; // Hide placeholder on success
+             modalRecipeImage.style.opacity = '1'; // Show image
+        };
+        // Set src AFTER handlers are attached
+        modalRecipeImage.src = recipe.img || ''; // Let onerror handle empty src
+
+
+        modalRecipeTitle.textContent = recipe.name || 'Recipe Details';
+        modalRecipeDesc.textContent = recipe.desc || 'No description available.';
+
+        // Populate Ingredients
+        modalIngredientsList.innerHTML = '';
+        let hasIngredients = false;
+        if (recipe.ingredients && recipe.ingredients.length > 0) {
+            hasIngredients = true;
+            let meatName = 'Meat'; // Default
+            const lowerCaseName = recipe.name.toLowerCase();
+            if (lowerCaseName.includes('pork')) meatName = 'Pork';
+            else if (lowerCaseName.includes('chicken')) meatName = 'Chicken';
+            else if (lowerCaseName.includes('beef')) meatName = 'Beef';
+            else if (lowerCaseName.includes('fish')) meatName = 'Fish';
+            modalIngredientsList.innerHTML += `<li><strong>${currentMeatWeightGrams.toFixed(0)}g</strong> ${meatName} (Your Amount)</li><li><hr></li>`;
+
+            recipe.ingredients.forEach(item => {
+                const li = document.createElement('li');
+                let baseText = item.text || "";
+                let quantityPart = "";
+                const unit = item.unit || "";
+                const u = unit.toLowerCase();
+
+                if (item.baseQty !== null && typeof item.baseQty === 'number' && item.baseQty > 0 && SCALABLE_UNITS.includes(u)) {
+                    const scaledQty = item.baseQty * scalingFactor;
+                    const formattedQty = formatQuantity(scaledQty, unit);
+                    if (formattedQty) quantityPart = `<strong>${formattedQty}${unit && !DESCRIPTIVE_UNITS.includes(u) ? unit : ''}</strong>`;
+                } else if (item.baseQty && unit && !DESCRIPTIVE_UNITS.includes(u) && !NON_SCALABLE_UNITS_STRICT.includes(u) && !COUNT_UNITS.includes(u)) {
+                    quantityPart = `<strong>${item.baseQty} ${unit}</strong>`;
+                } else if (item.baseQty && (NON_SCALABLE_UNITS_STRICT.includes(u) || COUNT_UNITS.includes(u))) {
+                    quantityPart = `<strong>${item.baseQty} ${unit}</strong>`;
+                } else if (DESCRIPTIVE_UNITS.includes(u)) {
+                    baseText = `${baseText} <em>(${unit})</em>`;
+                }
+
+                li.innerHTML = `${quantityPart} ${baseText}`.trim();
+                if (li.innerHTML) modalIngredientsList.appendChild(li);
+            });
+        }
+        if (!hasIngredients) modalIngredientsList.innerHTML = '<li>Ingredients not specified.</li>';
+
+        // Populate Instructions
+        modalInstructionsList.innerHTML = '';
+        if (recipe.instructions && recipe.instructions.length > 0) {
+            recipe.instructions.forEach(step => {
+                modalInstructionsList.innerHTML += `<li>${step}</li>`;
+            });
+        } else {
+            modalInstructionsList.innerHTML = '<li>Instructions not provided.</li>';
+        }
+
+        // Show Modal
+        recipeModal.classList.add('active');
+        recipeModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        recipeModal.querySelector('.modal-content').scrollTop = 0;
+        modalCloseBtn.focus();
+    };
+
+    /** Closes the recipe modal. */
+    const closeRecipeModal = () => {
+        recipeModal.classList.remove('active');
+        recipeModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        if (lastFocusedElement) lastFocusedElement.focus();
+    };
+
+    /** Displays recipe suggestion cards in a Swiper carousel. */
+    const displayRecipeSuggestions = (meatType) => {
+        recipeLoadingIndicator.classList.add('hidden');
+        recipeSwiperWrapper.innerHTML = '';
+
+        const recipes = recipesData[meatType] || [];
+
+        if (recipes.length === 0) {
+            suggestionCarouselContainer.classList.add('hidden');
+            recipePlaceholder.textContent = `No specific recipe ideas found for "${meatType}" yet.`;
+            recipePlaceholder.classList.remove('hidden');
+            if (recipeSwiperInstance) {
+                recipeSwiperInstance.destroy(true, true);
+                recipeSwiperInstance = null;
+            }
+            return;
+        }
+
+        recipePlaceholder.classList.add('hidden');
+        suggestionCarouselContainer.classList.remove('hidden');
+
+        recipes.forEach(recipe => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+
+            const card = document.createElement('div');
+            card.className = 'suggestion-card';
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('aria-label', `View recipe details for ${recipe.name}`);
+            const difficultyClass = `difficulty-${recipe.difficulty.toLowerCase()}`;
+
+            card.innerHTML = `
+              <div class="suggestion-img-container">
+                 <img src="${recipe.img || ''}" alt="${recipe.name}" loading="lazy" onerror="this.style.visibility='hidden'; this.parentElement.style.backgroundColor='var(--border-color)';">
+              </div>
+              <div class="suggestion-content">
+                <h4 class="suggestion-name">${recipe.name}</h4>
+                <p class="suggestion-desc">${recipe.desc}</p>
+                <div class="suggestion-tags">
+                    <span class="tag"><i class="fa-solid fa-stopwatch"></i> ${recipe.time}</span>
+                    <span class="tag ${difficultyClass}"><i class="fa-solid fa-chart-simple"></i> ${recipe.difficulty}</span>
+                </div>
+                 <div class="suggestion-action">
+                     <span class="view-recipe-link">View Recipe <i class="fa-solid fa-arrow-right"></i></span>
+                 </div>
+              </div>
+            `;
+
+            const actionHandler = () => openRecipeModal(recipe);
+            card.addEventListener('click', actionHandler);
+            card.addEventListener('keypress', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); actionHandler(); } });
+
+            slide.appendChild(card);
+            recipeSwiperWrapper.appendChild(slide);
+        });
+
+        if (recipeSwiperInstance) {
+            recipeSwiperInstance.destroy(true, true);
+        }
+
+        recipeSwiperInstance = new Swiper('.recipe-swiper', {
+            slidesPerView: 1,
+            spaceBetween: 15,
+            loop: recipes.length > 3, // Sensible looping condition
+            autoplay: {
+              delay: 4000, // Adjust speed
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            },
+            pagination: {
+              el: '.recipe-swiper-pagination',
+              clickable: true,
+            },
+            navigation: {
+              nextEl: '.recipe-swiper-next',
+              prevEl: '.recipe-swiper-prev',
+            },
+            breakpoints: {
+              576: { slidesPerView: 2, spaceBetween: 20 },
+              768: { slidesPerView: 2.5, spaceBetween: 25 },
+              1024: { slidesPerView: 3, spaceBetween: 30 },
+              1200: { slidesPerView: 3.5, spaceBetween: 30 }
+            },
+            grabCursor: true, // Add grab cursor
+          });
+
+        void suggestionCarouselContainer.offsetWidth;
+        suggestionCarouselContainer.classList.add('visible');
+    };
+
+    // --- Event Listeners ---
+
+    // Toggle custom portion input
+    portionSizeSelect.addEventListener('change', function() {
+        if (this.value === 'custom') {
+            customPortionGroup.classList.remove('hidden');
+            customPortionInput.required = true; customPortionInput.focus();
+        } else {
+            customPortionGroup.classList.add('hidden');
+            customPortionInput.required = false; customPortionInput.value = '';
+            clearError(customPortionInput);
+        }
+    });
+
+    // Form submission
+    meatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const originalButtonText = calculateBtn.innerHTML;
+        calculateBtn.disabled = true;
+        calculateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calculating...';
+
+        resultList.classList.add('hidden');
+        resultList.classList.remove('visible');
+        resultPlaceholder.classList.add('hidden');
+        resultLoadingIndicator.classList.remove('hidden');
+        recipeLoadingIndicator.classList.remove('hidden');
+        suggestionCarouselContainer.classList.add('hidden');
+        suggestionCarouselContainer.classList.remove('visible');
+        recipePlaceholder.classList.add('hidden');
+
+        let isValid = true;
+        clearError(meatWeightInput);
+        if (portionSizeSelect.value === 'custom') clearError(customPortionInput);
+
+        if (!validateInput(meatWeightInput, 'Please enter a valid weight.')) isValid = false;
+
+        const rawWeightValue = parseFloat(meatWeightInput.value);
+        const selectedUnit = meatWeightUnitSelect.value;
+        currentMeatWeightGrams = convertToGrams(rawWeightValue, selectedUnit);
+
+        if (isValid && currentMeatWeightGrams <= 0) {
+             showError(meatWeightInput, 'Weight must be positive.'); isValid = false;
+        }
+
+        const selectedPortionOption = portionSizeSelect.value;
+        portionGrams = 0;
+
+        if (selectedPortionOption === 'custom') {
+            if (!validateInput(customPortionInput, 'Enter valid custom portion.')) {
+                isValid = false;
+            } else {
+                 portionGrams = parseFloat(customPortionInput.value);
+                 if(isNaN(portionGrams) || portionGrams <= 0) {
+                     showError(customPortionInput, 'Custom portion must be positive.'); isValid = false;
+                 }
+            }
+        } else {
+            portionGrams = portionSizes[selectedPortionOption] || portionSizes.medium;
+        }
+
+        if (!isValid) {
+            calculateBtn.disabled = false; calculateBtn.innerHTML = originalButtonText;
+            resultLoadingIndicator.classList.add('hidden');
+            recipeLoadingIndicator.classList.add('hidden');
+            resultPlaceholder.classList.remove('hidden');
+            recipePlaceholder.classList.remove('hidden');
+            const firstErrorInput = meatForm.querySelector('.input-error');
+            if (firstErrorInput) {
+                firstErrorInput.focus();
+                firstErrorInput.closest('.input-group')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return;
+        }
+
+        const meatType = meatTypeSelect.value;
+
+        setTimeout(() => {
+            try {
+                const servingsNum = calculateServings(currentMeatWeightGrams, portionGrams);
+                const recommendations = getRecommendations(meatType);
+                displayResults(servingsNum, recommendations);
+                displayRecipeSuggestions(meatType);
+
+                // Scroll to results after calculation
+                const resultsCard = document.querySelector('.result-card');
+                if (resultsCard) {
+                    // Adding slight delay before scroll to ensure layout is stable after results render
+                    setTimeout(() => {
+                        resultsCard.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+                    }, 100); // 100ms delay
+                }
+
+            } catch (error) {
+                 console.error("Error during calculation/display:", error);
+                 resultPlaceholder.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i><p>Oops! Something went wrong. Please try again.</p>`;
+                 resultPlaceholder.classList.remove('hidden');
+                 recipePlaceholder.textContent = "Could not load recipes due to an error.";
+                 recipePlaceholder.classList.remove('hidden');
+                 resultLoadingIndicator.classList.add('hidden');
+                 recipeLoadingIndicator.classList.add('hidden');
+
+            } finally {
+                 calculateBtn.disabled = false; calculateBtn.innerHTML = originalButtonText;
+            }
+
+        }, 500); // Simulate calculation time
+    });
+
+    // Modal Close Listeners
+    modalCloseBtn.addEventListener('click', closeRecipeModal);
+    modalOverlay.addEventListener('click', closeRecipeModal);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && recipeModal.classList.contains('active')) closeRecipeModal(); });
+
+    // --- Initial Setup ---
+    calculateScrollbarWidth(); // Set CSS variable for scrollbar width
+    window.addEventListener('resize', calculateScrollbarWidth); // Recalculate on resize
+
+    resultList.classList.add('hidden');
+    resultPlaceholder.classList.remove('hidden');
+    suggestionCarouselContainer.classList.add('hidden');
+    recipePlaceholder.classList.remove('hidden');
+    if (portionSizeSelect.value !== 'custom') { customPortionGroup.classList.add('hidden'); customPortionInput.required = false; }
+    if(currentYearSpan) currentYearSpan.textContent = new Date().getFullYear();
+
+}); // End DOMContentLoaded
