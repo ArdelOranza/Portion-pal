@@ -1,10 +1,5 @@
-Okay, here's a README file for your project and instructions on running and modifying it, especially regarding recipes.
 
 Portion Pal - Meat Portion Calculator & Filipino Recipe Suggester
-
-![alt text](![image](https://github.com/user-attachments/assets/435d8860-4e01-4deb-a8c0-e097ca709866)
-)
-<!-- Optional: Add a screenshot of your app here -->
 
 Portion Pal is a web application designed to help users accurately calculate meat portions for meals and discover relevant Filipino recipe suggestions based on the chosen meat type and quantity. It automatically scales recipe ingredients based on the user's input meat weight.
 
@@ -251,14 +246,6 @@ An internet connection is required to load these external dependencies when the 
 Potential Improvements / Future Ideas
 
 Add more diverse recipes (international, dietary restrictions).
-
-Implement search/filtering for recipes.
-
-Allow users to save favorite recipes.
-
-Add more specific cooking recommendations based on cut of meat.
-
-Include nutritional information estimates.
 
 Option to switch between metric and imperial units for display (requires more complex conversion logic).
 
