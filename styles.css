@@ -65,7 +65,6 @@ h1 { font-size: 2.8rem; }
 h2 { font-size: 2.2rem; }
 h3 { font-size: 1.5rem; } /* Used in calculator card titles */
 h4 { font-size: 1.25rem; margin-bottom: 0.6em;} /* Used for recipe card titles */
-/* h5 is styled specifically within recipe details */
 
 .subtitle {
     font-size: 1.15rem;
@@ -230,7 +229,7 @@ h4 { font-size: 1.25rem; margin-bottom: 0.6em;} /* Used for recipe card titles *
     align-items: start;
 }
 
-.card { /* General card style used by calculator */
+.card { /* General card style */
     background: var(--card-background);
     border-radius: var(--border-radius-lg);
     padding: 35px 40px;
@@ -284,7 +283,7 @@ label i {
 .select-wrapper {
     position: relative;
 }
-.select-wrapper::after {
+.select-wrapper::after { /* Default arrow for most selects */
     content: '\f078';
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
@@ -299,7 +298,7 @@ label i {
 
 select, input[type="number"] {
     width: 100%;
-    padding: 14px 40px 14px 18px;
+    padding: 14px 40px 14px 18px; /* Default padding for selects */
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-md);
     font-size: 1rem;
@@ -307,12 +306,12 @@ select, input[type="number"] {
     color: var(--text-dark);
     background-color: #fff;
     transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-    appearance: none;
+    appearance: none; /* Remove default system appearance */
     -webkit-appearance: none;
     -moz-appearance: none;
 }
 input[type="number"] {
-    padding: 14px 18px;
+    padding: 14px 18px; /* Specific padding for number input */
 }
 
 select:focus, input:focus {
@@ -326,10 +325,54 @@ input::placeholder {
     opacity: 0.9;
 }
 
+/* Hide number input arrows */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; }
+
+
+/* Style the combined weight input and unit selector */
+.weight-input-group .weight-input-container {
+    display: flex;
+    gap: 10px; /* Space between input and select */
+    align-items: stretch; /* Make them same height */
+}
+
+.weight-input-group .weight-input-container input[type="number"] {
+    flex-grow: 1; /* Allow input to take available space */
+    width: auto; /* Override default width: 100% */
+    padding-right: 10px; /* Adjust padding since spinner buttons are hidden */
+}
+
+.weight-input-group .unit-select-wrapper {
+    flex-shrink: 0; /* Prevent unit selector from shrinking */
+    width: 80px; /* Fixed width for the unit dropdown */
+    position: relative; /* Needed for the FontAwesome arrow */
+}
+
+.weight-input-group .unit-select-wrapper select {
+    width: 100%;
+    height: 100%; /* Match height of number input */
+    padding: 14px 35px 14px 15px; /* Adjust padding for the unit select */
+    border-radius: var(--border-radius-md); /* Ensure consistent border radius */
+    /* Inherit other select styles */
+}
+
+/* Ensure the FontAwesome arrow is positioned correctly in the UNIT select */
+.weight-input-group .unit-select-wrapper::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    right: 12px; /* Adjust position for the narrower unit select */
+    transform: translateY(-50%);
+    color: var(--text-light);
+    pointer-events: none;
+    font-size: 0.8em; /* Slightly smaller arrow */
+}
+
 
 /* --- Validation Styles --- */
 .error-message {
@@ -342,21 +385,40 @@ input[type=number] { -moz-appearance: textfield; }
     opacity: 0;
     transition: opacity var(--transition-speed) ease;
 }
-input.input-error + .error-message,
-.input-group:has(select.input-error) .error-message {
+
+/* Show error message */
+.input-group:has(.input-error) .error-message {
+    opacity: 1;
+}
+/* Ensure opacity transition works when message appears */
+.error-message:not(:empty) {
     opacity: 1;
 }
 
+
+/* Style inputs/selects with errors */
 input.input-error, select.input-error {
-    border-color: var(--error-color);
+    border-color: var(--error-color) !important; /* Use important to override focus */
     background-color: var(--error-background);
 }
-input.input-error:focus, select.input-error:focus {
-     box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+/* Also style the container border for weight input */
+.weight-input-container.input-error input,
+.weight-input-container.input-error select {
+     border-color: var(--error-color) !important;
+     background-color: var(--error-background);
 }
-.select-wrapper.input-error::after {
+
+
+input.input-error:focus, select.input-error:focus {
+     box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15); /* Keep focus style */
+     border-color: var(--error-color) !important; /* Keep border red on focus */
+}
+/* Style select wrapper arrow on error */
+.select-wrapper.input-error::after,
+.input-group:has(select.input-error) .select-wrapper::after {
     color: var(--error-color);
 }
+
 
 /* --- Button --- */
 .button {
@@ -474,7 +536,7 @@ input.input-error:focus, select.input-error:focus {
     text-align: right;
 }
 
-/* --- Recipe Suggestions (Expandable Cards) --- */
+/* --- Recipe Suggestions --- */
 .recipe-suggestions {
     margin-top: 50px;
     padding-top: 30px;
@@ -483,13 +545,18 @@ input.input-error:focus, select.input-error:focus {
 
 .suggestion-cards-container {
     position: relative;
-    min-height: 200px;
+    min-height: 200px; /* Ensure space for placeholder */
 }
 
 .suggestion-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
+    opacity: 0; /* Start hidden */
+    transition: opacity 0.5s ease;
+}
+.suggestion-cards.visible {
+    opacity: 1; /* Fade in */
 }
 
 .placeholder-message {
@@ -498,6 +565,7 @@ input.input-error:focus, select.input-error:focus {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80%;
+    max-width: 500px; /* Prevent placeholder from becoming too wide */
     text-align: center;
     color: var(--text-light);
     padding: 30px;
@@ -505,10 +573,15 @@ input.input-error:focus, select.input-error:focus {
     border: 2px dashed var(--border-color);
     border-radius: var(--border-radius-md);
     background-color: rgba(255, 255, 255, 0.5);
+    transition: opacity 0.3s ease; /* Smooth hide/show */
 }
-.placeholder-message.hidden { display: none; }
+.placeholder-message.hidden {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction when hidden */
+    display: none; /* Also hide completely */
+}
 
-/* REVAMPED Suggestion Card */
+/* Suggestion Card */
 .suggestion-card {
     background: var(--card-background);
     border-radius: var(--border-radius-md);
@@ -518,17 +591,17 @@ input.input-error:focus, select.input-error:focus {
     display: flex;
     flex-direction: column;
     box-shadow: 0 5px 15px var(--shadow-light);
+    cursor: pointer; /* Indicate clickable */
 }
 
+.suggestion-card:hover,
 .suggestion-card:focus-within {
      box-shadow: 0 8px 25px var(--shadow-medium);
      border-color: var(--secondary-color);
+     transform: translateY(-3px); /* Slight lift on hover/focus */
 }
-
-.recipe-summary {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+.suggestion-card:focus {
+    outline: none; /* Handled by focus-within */
 }
 
 .suggestion-img-container {
@@ -547,15 +620,10 @@ input.input-error:focus, select.input-error:focus {
     transition: transform 0.4s ease;
 }
 .suggestion-card:hover .suggestion-img-container img {
-    transform: scale(1.03);
-}
-.suggestion-img-container i {
-    font-size: 4rem;
-    color: var(--text-light);
-    opacity: 0.5;
+    transform: scale(1.05); /* Slightly larger scale */
 }
 
-.suggestion-content-summary {
+.suggestion-content { /* Wrapper for text content below image */
     padding: 20px 25px;
     flex-grow: 1;
     display: flex;
@@ -576,19 +644,21 @@ input.input-error:focus, select.input-error:focus {
     color: var(--text-medium);
     line-height: 1.6;
     margin-bottom: 15px;
+    /* Limit text lines */
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3; /* Show 3 lines */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-height: calc(1.6em * 3); /* Reserve space for 3 lines */
 }
 
 .suggestion-tags {
     display: flex;
     gap: 8px;
-    margin-bottom: 15px;
+    margin-bottom: 20px; /* Increased space before action */
     flex-wrap: wrap;
-    margin-top: auto;
+    margin-top: auto; /* Pushes tags down */
 }
 .tag {
     background-color: var(--border-color);
@@ -606,101 +676,38 @@ input.input-error:focus, select.input-error:focus {
 .tag.difficulty-medium { background-color: #FEF9E7; color: #F39C12; }
 .tag.difficulty-hard { background-color: #FADBD8; color: #C0392B; }
 
-/* Action Button (Expand/Collapse Trigger) */
-.suggestion-action {
-    padding: 15px 25px;
+
+.suggestion-action { /* Styles for the link area */
     border-top: 1px solid var(--border-color);
-    background-color: #fdfdfd;
-    text-align: center;
+    padding: 15px 25px;
+    margin-top: auto; /* Ensure it's at the bottom */
+    text-align: right; /* Align link to the right */
 }
 
-.expand-recipe-btn {
-    background: none;
-    border: none;
+.view-recipe-link {
     color: var(--primary-color);
     font-weight: 600;
     font-size: 0.9rem;
-    cursor: pointer;
-    transition: color var(--transition-speed) ease, background-color var(--transition-speed) ease;
+    text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 5px 10px;
-    border-radius: var(--border-radius-sm);
+    gap: 6px;
+    transition: color var(--transition-speed) ease, gap var(--transition-speed) ease;
 }
-.expand-recipe-btn i {
+.view-recipe-link i {
     transition: transform 0.3s ease;
 }
-.expand-recipe-btn:hover,
-.expand-recipe-btn:focus {
+
+.suggestion-card:hover .view-recipe-link,
+.suggestion-card:focus-within .view-recipe-link {
     color: var(--primary-dark);
-    background-color: #f0f0f0;
-    outline: none;
+    gap: 10px; /* Make arrow move slightly */
 }
-.suggestion-card.expanded .expand-recipe-btn i {
-    transform: rotate(180deg);
+.suggestion-card:hover .view-recipe-link i,
+.suggestion-card:focus-within .view-recipe-link i {
+    transform: translateX(3px);
 }
 
-/* Hidden Recipe Details Section (For Expandable Card) */
-.recipe-details-content {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.6s cubic-bezier(0.25, 0.8, 0.25, 1),
-                opacity 0.4s ease-in-out 0.1s,
-                padding 0.6s ease;
-    background-color: var(--details-bg-light);
-    border-top: 1px solid var(--border-color);
-    padding: 0 25px;
-}
-.suggestion-card.expanded .recipe-details-content {
-    max-height: 1500px;
-    opacity: 1;
-    padding: 25px 25px;
-}
-.details-grid { /* Grid within expandable card */
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 30px;
-}
-.details-grid h5 {
-    font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 1rem;
-    color: var(--text-dark);
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 8px;
-}
-.details-grid h5 i {
-    color: var(--secondary-color);
-    width: 18px;
-    text-align: center;
-}
-.details-ingredients-list, .details-instructions-list {
-    list-style: none;
-    padding-left: 5px;
-    margin: 0;
-}
-.details-ingredients-list li, .details-instructions-list li {
-    margin-bottom: 10px;
-    color: var(--text-medium);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    position: relative;
-    padding-left: 22px;
-}
-.details-ingredients-list li::before {
-    content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--success-color); position: absolute; left: 0; top: 5px; font-size: 0.8em;
-}
-.details-instructions-list { counter-reset: instruction-counter-details; }
-.details-instructions-list li { counter-increment: instruction-counter-details; }
-.details-instructions-list li::before {
-    content: counter(instruction-counter-details); background-color: var(--secondary-color); color: white; font-size: 0.75em; font-weight: 600; border-radius: 50%; width: 1.6em; height: 1.6em; display: inline-block; text-align: center; line-height: 1.6em; position: absolute; left: 0px; top: 3px;
-}
 
 /* --- Footer --- */
 .site-footer {
@@ -710,6 +717,7 @@ input.input-error:focus, select.input-error:focus {
     padding: 40px 0;
     font-size: 0.9rem;
 }
+
 .footer-content {
     display: flex;
     flex-wrap: wrap;
@@ -717,6 +725,7 @@ input.input-error:focus, select.input-error:focus {
     align-items: center;
     gap: 20px;
 }
+
 .footer-logo {
     display: flex;
     align-items: center;
@@ -727,15 +736,43 @@ input.input-error:focus, select.input-error:focus {
 .footer-logo .logo-text { font-size: 1.3rem; color: var(--background-color); }
 .footer-logo .logo-text sup { color: var(--accent-color); }
 
-.footer-links a {
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 5px 10px; /* Vertical and horizontal gap */
+}
+
+.footer-link {
     color: var(--text-light);
     text-decoration: none;
-    margin: 0 10px;
     transition: color var(--transition-speed) ease;
+    display: inline-flex;
+    align-items: center;
 }
-.footer-links a:hover {
+
+.footer-link:hover {
     color: var(--background-color);
 }
+
+.footer-separator {
+    color: var(--text-medium);
+    margin: 0 5px;
+    user-select: none;
+}
+
+.report-issue-link i {
+    margin-right: 6px;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.report-issue-link:hover {
+    color: var(--accent-color);
+}
+
 .footer-copyright {
     width: 100%;
     text-align: center;
@@ -749,7 +786,7 @@ input.input-error:focus, select.input-error:focus {
 /* --- Utility --- */
 .hidden { display: none !important; }
 
-/* --- Recipe Modal (Styles Refined for Single Column Vertical Flow) --- */
+/* --- Recipe Modal --- */
 .recipe-modal {
     position: fixed;
     inset: 0;
@@ -773,115 +810,121 @@ input.input-error:focus, select.input-error:focus {
     background-color: rgba(44, 62, 80, 0.7);
     cursor: pointer;
 }
-.modal-content { /* MODIFIED */
+.modal-content {
     position: relative;
     background: var(--card-background);
     border-radius: var(--border-radius-lg);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     z-index: 1051;
     width: 100%;
-    max-width: 750px; /* Adjusted width for vertical focus */
-    max-height: 88vh; /* Allow modal to use vertical space */
-    overflow-y: auto; /* Scroll the entire modal content if needed */
-    padding: 40px 45px; /* Good padding */
+    max-width: 750px;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 40px 45px;
     transform: scale(0.95) translateY(10px);
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0;
-    /* Reverted flex display */
 }
 .recipe-modal.active .modal-content {
     transform: scale(1) translateY(0);
     opacity: 1;
 }
-.modal-close-btn { /* Keep refined focus */
+.modal-close-btn {
     position: absolute; top: 18px; right: 18px; background: transparent; border: none; font-size: 1.7rem; color: var(--text-light); cursor: pointer; padding: 5px; line-height: 1; transition: opacity var(--transition-speed) ease; z-index: 1052; opacity: 0.7;
 }
 .modal-close-btn:hover { opacity: 1; }
 .modal-close-btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(86, 101, 115, 0.4); border-radius: 4px; opacity: 1; }
 
-/* MODIFIED Modal Body -> Single column flow */
 .modal-body {
-    /* Remove grid layout */
-    padding-bottom: 20px; /* Space at the very bottom */
+    padding-bottom: 20px;
 }
 
-.modal-image-container { /* MODIFIED */
+.modal-image-container {
     width: 100%;
-    aspect-ratio: 16 / 9; /* Widescreen */
+    aspect-ratio: 16 / 9;
     overflow: hidden;
     border-radius: var(--border-radius-md);
     background-color: var(--border-color);
-    margin-bottom: 25px; /* Space below image */
+    margin-bottom: 25px;
 }
-.modal-image-container img { /* Unchanged */
+.modal-image-container img {
     width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit;
 }
-.modal-text-content {
-   /* This class might not be strictly needed anymore, content flows directly */
-}
 
-/* MODIFIED Modal Typography & Spacing for Vertical Flow */
-.modal-title { /* Center Title */
-    font-size: 2rem; /* Larger title */
+.modal-title {
+    font-size: 2rem;
     margin-bottom: 15px;
     line-height: 1.3;
     color: var(--primary-dark);
     font-family: var(--font-heading);
     text-align: center;
-    max-width: 90%; /* Prevent very long titles */
+    max-width: 90%;
     margin-left: auto;
     margin-right: auto;
 }
-.modal-description { /* Center Description */
-    font-size: 1rem; /* Slightly larger desc */
-    margin-bottom: 35px; /* More space below */
+.modal-description {
+    font-size: 1rem;
+    margin-bottom: 35px;
     line-height: 1.75;
     color: var(--text-medium);
     text-align: center;
-    max-width: 85%; /* Restrict width */
+    max-width: 85%;
     margin-left: auto;
     margin-right: auto;
 }
-.modal-details-grid { /* MODIFIED: Details BELOW description */
+.modal-details-grid {
     display: grid;
     grid-template-columns: 1fr; /* Stack initially */
-    gap: 35px; /* Gap between Ingredients/Instructions columns when side-by-side */
-    margin-top: 30px; /* Space above details */
-    padding-top: 30px; /* More padding above */
-    border-top: 1px solid var(--border-color); /* Separator line */
+    gap: 35px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border-color);
 }
 .modal-details-grid > div {
-    /* No internal scrolling needed */
     padding-bottom: 10px;
 }
-.modal-details-grid h4 { /* Detail headings */
-    font-size: 1.2rem; /* Larger detail headings */
-    margin-bottom: 18px; /* More space below heading */
+.modal-details-grid h4 {
+    font-size: 1.2rem;
+    margin-bottom: 18px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border-color);
-    background-color: transparent; /* No special background */
-    position: relative; /* Ensure it's not sticky */
-    /* Keep other styles */
     font-family: var(--font-primary); font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 10px;
 }
-.modal-details-grid h4 i { /* Unchanged */
+.modal-details-grid h4 i {
     color: var(--secondary-color); font-size: 1.1em; width: 20px; text-align: center;
 }
-.modal-ingredients-list, .modal-instructions-list { /* Unchanged */
+
+/* Styling for ingredient list items, including the strong tag */
+.modal-ingredients-list {
     padding-top: 5px; list-style: none; padding-left: 5px; margin: 0;
 }
-.modal-ingredients-list li, .modal-instructions-list li { /* MODIFIED */
-    margin-bottom: 12px; /* More spacing */
-    font-size: 0.95rem; /* Slightly larger list font */
-    line-height: 1.7; /* More line height */
-    position: relative; padding-left: 28px; /* More indent */ color: var(--text-medium);
+.modal-ingredients-list li {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--text-medium);
+    padding-left: 10px; /* Base padding */
 }
-.modal-ingredients-list li::before { /* Icon - slight adjustment */
-    content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--success-color); position: absolute; left: 2px; top: 6px; font-size: 0.9em;
+.modal-ingredients-list li::before { /* Remove default bullet */
+    content: "";
+    display: none;
 }
-.modal-instructions-list { counter-reset: instruction-counter; }
-.modal-instructions-list li { counter-increment: instruction-counter; }
-.modal-instructions-list li::before { /* Number - slight adjustment */
+.modal-ingredients-list li strong { /* Style the quantity/unit part */
+    color: var(--text-dark);
+    font-weight: 600;
+    margin-right: 8px; /* Space between quantity and text */
+    display: inline-block; /* Ensures margin works */
+    min-width: 50px; /* Align quantities slightly */
+}
+
+/* Styling for instruction list */
+.modal-instructions-list {
+    padding-top: 5px; list-style: none; padding-left: 5px; margin: 0; counter-reset: instruction-counter;
+}
+.modal-instructions-list li {
+    margin-bottom: 12px; font-size: 0.95rem; line-height: 1.7; position: relative; padding-left: 28px; color: var(--text-medium); counter-increment: instruction-counter;
+}
+.modal-instructions-list li::before {
     content: counter(instruction-counter); background-color: var(--secondary-color); color: white; font-size: 0.75em; font-weight: 700; border-radius: 50%; width: 1.6em; height: 1.6em; display: inline-block; text-align: center; line-height: 1.6em; position: absolute; left: 0px; top: 5px;
 }
 
@@ -901,17 +944,10 @@ body.modal-open { overflow: hidden; }
      }
 }
 
-@media (min-width: 768px) { /* Apply side-by-side for details */
-    /* Expandable card details grid */
-    .details-grid {
+@media (min-width: 768px) { /* Modal details side-by-side */
+    .modal-details-grid {
         grid-template-columns: 1fr 1fr;
         gap: 40px;
-    }
-
-    /* Modal Details Grid Side-by-Side */
-    .modal-details-grid {
-        grid-template-columns: 1fr 1fr; /* Side-by-side */
-        gap: 40px; /* Adjust gap */
     }
 }
 
@@ -921,10 +957,10 @@ body.modal-open { overflow: hidden; }
     .hero-section { margin-bottom: 40px; }
     .card { padding: 30px; }
     .suggestion-cards { gap: 25px; }
-    .footer-content { flex-direction: column; text-align: center; }
-    .footer-links { margin: 15px 0; }
 
-    /* Modal adjustments for tablet */
+    .footer-content { flex-direction: column; text-align: center; }
+    .footer-links { margin: 15px 0; justify-content: center; }
+
     .modal-content { padding: 30px 35px; max-width: 90%; }
     .modal-title { font-size: 1.8rem; }
     .modal-description { font-size: 0.95rem; max-width: 95%; }
@@ -939,31 +975,42 @@ body.modal-open { overflow: hidden; }
     .result-item { flex-direction: column; align-items: flex-start; gap: 5px; }
     .result-value { text-align: left; }
 
-    /* Expandable Card adjustments */
     .suggestion-cards { grid-template-columns: 1fr; gap: 20px; }
     .suggestion-img-container { height: 160px; }
-    .suggestion-content-summary { padding: 15px 20px; }
+    .suggestion-content { padding: 15px 20px; }
     .suggestion-name { font-size: 1.1rem; }
-    .suggestion-desc { font-size: 0.85rem; -webkit-line-clamp: 2; }
+    .suggestion-desc { font-size: 0.85rem; -webkit-line-clamp: 2; min-height: calc(1.6em * 2); }
     .tag { font-size: 0.7rem; padding: 2px 8px; }
-    .expand-recipe-btn { font-size: 0.85rem; }
-    .recipe-details-content { padding: 0 20px; }
-    .suggestion-card.expanded .recipe-details-content { padding: 20px 20px; }
-    .details-grid { gap: 20px; }
-    .details-grid h5 { font-size: 0.95rem; }
-    .details-ingredients-list li, .details-instructions-list li { font-size: 0.85rem; padding-left: 20px; }
-    .details-instructions-list li::before { width: 1.5em; height: 1.5em; line-height: 1.5em;}
+    .view-recipe-link { font-size: 0.85rem; }
 
-    /* Modal adjustments */
+    .footer-links { gap: 8px; }
+    /* .footer-separator { display: none; } */ /* Optional */
+
     .recipe-modal { padding: 10px; }
     .modal-content { padding: 20px 20px; max-height: 90vh; }
-    .modal-image-container { margin-bottom: 20px; aspect-ratio: 4 / 3; } /* Adjust aspect ratio for mobile */
+    .modal-image-container { margin-bottom: 20px; aspect-ratio: 4 / 3; }
     .modal-title { font-size: 1.5rem; }
     .modal-description { font-size: 0.85rem; margin-bottom: 20px; max-width: 100%; }
-    .modal-details-grid { gap: 25px; margin-top: 20px; padding-top: 20px; grid-template-columns: 1fr; } /* Ensure stacking */
+    .modal-details-grid { gap: 25px; margin-top: 20px; padding-top: 20px; grid-template-columns: 1fr; }
     .modal-details-grid h4 { font-size: 1rem; margin-bottom: 10px; }
-    .modal-ingredients-list li, .modal-instructions-list li { font-size: 0.85rem; padding-left: 22px; line-height: 1.6; margin-bottom: 8px; }
-    .modal-ingredients-list li::before { top: 4px; }
+    .modal-ingredients-list li, .modal-instructions-list li { font-size: 0.85rem; line-height: 1.6; margin-bottom: 8px; }
+    .modal-ingredients-list li { padding-left: 8px; } /* Adjust padding */
+    .modal-ingredients-list li strong { min-width: 45px;} /* Adjust min-width */
+    .modal-instructions-list li { padding-left: 22px; }
     .modal-instructions-list li::before { top: 4px; width: 1.5em; height: 1.5em; line-height: 1.5em;}
     .modal-close-btn { top: 10px; right: 10px; font-size: 1.4rem; }
+}
+
+/* Responsive adjustments for weight input */
+@media (max-width: 400px) {
+    .weight-input-group .weight-input-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+     .weight-input-group .unit-select-wrapper {
+        width: 100%; /* Full width when stacked */
+    }
+     .weight-input-group .weight-input-container input[type="number"] {
+         width: 100%; /* Full width when stacked */
+     }
 }
