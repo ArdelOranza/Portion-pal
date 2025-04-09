@@ -6,16 +6,21 @@
     <title>Portion Pal - Perfect Meal Portions & Recipes</title>
     <meta name="description" content="Calculate meat portions accurately and discover delicious, scaled Filipino recipe ideas with Portion Pal. Plan your meals easily.">
 
+    <!-- FAVICON -->
     <link rel="icon" type="image/svg+xml" href="utensilsbr-solid.svg"> <!-- Make sure this file exists -->
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -65,11 +70,9 @@
                                     <option value="chicken">Chicken</option>
                                     <option value="beef">Beef</option>
                                     <option value="fish">Fish</option>
-                                    <!-- Add more meat types if desired -->
                                 </select>
                             </div>
                         </div>
-
                         <div class="input-group weight-input-group">
                             <label for="meatWeight"><i class="fa-solid fa-weight-scale"></i> Weight</label>
                             <div class="weight-input-container">
@@ -84,7 +87,6 @@
                             </div>
                             <span class="error-message" id="meatWeightError" role="alert" aria-live="assertive"></span>
                         </div>
-
                         <div class="input-group">
                             <label for="portionSize"><i class="fa-solid fa-user-group"></i> Serving Size Goal</label>
                             <div class="select-wrapper">
@@ -96,13 +98,11 @@
                                 </select>
                              </div>
                         </div>
-
                         <div class="input-group hidden" id="customPortionGroup">
                             <label for="customPortion"><i class="fa-solid fa-pen-ruler"></i> Custom (grams / person)</label>
                             <input type="number" id="customPortion" name="customPortion" placeholder="Enter grams per serving" min="1" aria-describedby="customPortionError">
                             <span class="error-message" id="customPortionError" role="alert" aria-live="assertive"></span>
                         </div>
-
                         <button type="submit" id="calculateBtn" class="button primary-button">
                             <i class="fa-solid fa-calculator"></i> Calculate & Suggest Recipes
                         </button>
@@ -120,8 +120,7 @@
                             <i class="fa-regular fa-lightbulb"></i>
                             <p>Enter your meat details to see portion calculations and cooking tips.</p>
                         </div>
-                        <ul class="result-list hidden" id="resultList">
-                        </ul>
+                        <ul class="result-list hidden" id="resultList"></ul>
                         <div id="resultLoadingIndicator" class="loading-indicator hidden">
                             <i class="fa-solid fa-spinner fa-spin"></i> Calculating...
                         </div>
@@ -130,30 +129,34 @@
             </div>
         </section>
 
-        <!-- Recipe Suggestions Section -->
+        <!-- Recipe Suggestions Section - Swiper JS -->
         <section id="recipes" class="recipe-suggestions" aria-labelledby="suggestions-heading">
             <h2 class="section-heading" id="suggestions-heading">Recipe Inspiration</h2>
-
-            <!-- Placeholder Message -->
             <p class="placeholder-message" id="recipePlaceholder">Select meat type and calculate to see tailored recipe ideas!</p>
 
-            <!-- Recipe Carousel Container -->
-            <div class="suggestion-carousel-container hidden" id="suggestionCarouselContainer">
-                 <!-- Slider main container -->
+            <!-- Swiper Container Wrapper - Provides space for external nav buttons -->
+            <div class="swiper-container-wrapper hidden" id="suggestionSwiperWrapper">
+                 <!-- Main Swiper Element -->
                  <div class="swiper recipe-swiper">
-                    <!-- Additional required wrapper -->
-                    <div class="swiper-wrapper" id="recipeSwiperWrapper">
-                        <!-- Slides are dynamically added here -->
-                    </div>
-                 </div>
-                 <!-- Pagination -->
-                 <div class="swiper-pagination recipe-swiper-pagination"></div>
+                     <div class="swiper-wrapper" id="recipeSwiperSlides">
+                         <!-- Slides added by JS -->
+                     </div>
 
-                 <!-- Loading Indicator for Recipes -->
-                 <div id="recipeLoadingIndicator" class="loading-indicator hidden">
-                     <i class="fa-solid fa-spinner fa-spin"></i> Loading recipes...
+                     <!-- Centered Pagination -->
+                     <div class="swiper-pagination"></div>
+
+                     <!-- Navigation Buttons (INSIDE swiper container, but positioned visually outside via CSS) -->
+                     <div class="swiper-button-prev"></div>
+                     <div class="swiper-button-next"></div>
                  </div>
+
+                  <!-- Loading Indicator (Positioned relative to the wrapper) -->
+                  <div id="recipeLoadingIndicator" class="loading-indicator hidden">
+                      <i class="fa-solid fa-spinner fa-spin"></i> Loading recipes...
+                  </div>
             </div>
+            <!-- End Swiper Container Wrapper -->
+
         </section>
     </main>
 
@@ -164,19 +167,14 @@
                  <span class="logo-text">Portion<sup>Pal</sup></span>
             </div>
             <div class="footer-links">
-                <a href="#" class="footer-link">Privacy Policy</a>
-                <span class="footer-separator">|</span>
-                <a href="#" class="footer-link">Terms of Service</a>
-                <span class="footer-separator">|</span>
-                <a href="#" class="footer-link">Contact Us</a>
-                <span class="footer-separator">|</span>
-                <a href="" target="_blank" rel="noopener noreferrer" class="footer-link report-issue-link" title="Report an issue (opens Facebook in new tab)"> <!-- !!! REPLACE WITH YOUR ACTUAL LINK !!! -->
+                <a href="#" class="footer-link">Privacy Policy</a><span class="footer-separator">|</span>
+                <a href="#" class="footer-link">Terms of Service</a><span class="footer-separator">|</span>
+                <a href="#" class="footer-link">Contact Us</a><span class="footer-separator">|</span>
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="footer-link report-issue-link" title="Report an issue (opens Facebook in new tab)">
                     <i class="fa-solid fa-bug"></i> Report Issue
                 </a>
             </div>
-            <div class="footer-copyright">
-                © <span id="currentYear"></span> PortionPal Demo. All Rights Reserved.
-            </div>
+            <div class="footer-copyright">© <span id="currentYear"></span> PortionPal Demo. All Rights Reserved.</div>
         </div>
     </footer>
 
@@ -184,12 +182,9 @@
     <div class="recipe-modal" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="recipeModalTitle" aria-hidden="true">
         <div class="modal-overlay" id="modalOverlay"></div>
         <div class="modal-content">
-            <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close recipe details">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+            <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close recipe details"><i class="fa-solid fa-xmark"></i></button>
             <div class="modal-body">
                 <div class="modal-image-container">
-                    <!-- Placeholder SVG in case image fails -->
                     <svg class="modal-image-placeholder" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><path fill="currentColor" d="M83.23,21.49a2.67,2.67,0,0,0-3.77,0L51.3,49.65a2.66,2.66,0,0,0,0,3.77L73.87,76.13a2.67,2.67,0,0,0,3.77,0L96.3,57.47a2.67,2.67,0,0,0,0-3.77ZM16.77,21.49a2.67,2.67,0,0,1,3.77,0L48.7,49.65a2.66,2.66,0,0,1,0,3.77L26.13,76.13a2.67,2.67,0,0,1-3.77,0L3.7,57.47a2.67,2.67,0,0,1,0-3.77Z"></path></svg>
                     <img id="modalRecipeImage" src="" alt="Recipe Image" loading="lazy">
                 </div>
@@ -213,6 +208,7 @@
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- Custom Script -->
     <script src="script.js" defer></script>
 </body>
 </html>
