@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ========================================================================
-    // == Recipe Data (Updated & Refined) =====================================
+    // == Recipe Data  =====================================
     // ========================================================================
     const recipesData = {
         pork: [
@@ -446,7 +446,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
     };
 
-    /** Converts various weight units to grams. */
     const convertToGrams = (value, unit) => {
         if (isNaN(value) || value <= 0) return 0;
         switch (unit.toLowerCase()) {
@@ -456,7 +455,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    /** Formats a scaled quantity for display. */
     const formatQuantity = (quantity, unit) => {
         if (quantity === null || isNaN(quantity) || quantity <= 0) return "";
         const u = unit ? unit.toLowerCase() : "";
@@ -521,7 +519,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (errorElement) { errorElement.textContent = message; errorElement.style.opacity = '1'; }
     };
 
-    /** Clears error message for an input field. */
     const clearError = (input) => {
         input.classList.remove('input-error');
         const parentGroup = input.closest('.input-group');
@@ -531,16 +528,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (errorElement) { errorElement.textContent = ''; errorElement.style.opacity = '0'; }
     };
 
-    /** Calculates the number of servings. */
     const calculateServings = (totalGrams, portionGrams) => {
         if (portionGrams <= 0 || totalGrams <=0 ) return 0;
         return Math.floor(totalGrams / portionGrams);
     };
 
-    /** Gets cooking recommendations. */
     const getRecommendations = (meatType) => recommendationsData[meatType] || { cooking: 'N/A', time: 'N/A', seasoning: 'N/A' };
-
-    /** Displays calculation results. */
     const displayResults = (servings, recommendations) => {
         resultLoadingIndicator.classList.add('hidden');
         resultPlaceholder.classList.add('hidden');
@@ -571,7 +564,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Modal Functions ---
-    /** Opens the recipe modal with scaled ingredients. */
     const openRecipeModal = (recipe) => {
         if (!recipe || !recipe.ingredients) {
              console.error("Recipe data missing for modal:", recipe);
@@ -588,7 +580,6 @@ document.addEventListener('DOMContentLoaded', () => {
              console.warn("Using base recipe amounts due to missing weights.");
         }
 
-        // Reset image state before setting new src
         modalRecipeImage.src = ''; // Clear previous src
         modalRecipeImage.style.opacity = '0'; // Hide image initially
         modalImagePlaceholder.style.display = 'none'; // Hide placeholder initially
@@ -673,7 +664,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lastFocusedElement) lastFocusedElement.focus();
     };
 
-    /** Displays recipe suggestion cards in a Swiper carousel. */
     const displayRecipeSuggestions = (meatType) => {
         recipeLoadingIndicator.classList.add('hidden');
         recipeSwiperWrapper.innerHTML = '';
@@ -739,7 +729,7 @@ document.addEventListener('DOMContentLoaded', () => {
             spaceBetween: 15,
             loop: recipes.length > 3, // Sensible looping condition
             autoplay: {
-              delay: 4000, // Adjust speed
+              delay: 3500, // Adjust speed
               disableOnInteraction: false,
               pauseOnMouseEnter: true,
             },
@@ -869,7 +859,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  calculateBtn.disabled = false; calculateBtn.innerHTML = originalButtonText;
             }
 
-        }, 500); // Simulate calculation time
+        }, 500); 
     });
 
     // Modal Close Listeners
