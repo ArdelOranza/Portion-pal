@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tittle - Meal Planner</title> <!-- Updated title -->
+    <title>Perfect Portions - Meal Planner</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,10 +21,9 @@
         <div class="container">
             <nav class="main-nav">
                 <a href="#" class="logo">
-                    <i class="fa-solid fa-utensils logo-icon"></i> <!-- Changed Icon -->
-                    <span class="logo-text">Tittle<sup>Pal</sup></span> <!-- Updated Name -->
+                    <i class="fa-solid fa-utensils logo-icon"></i>
+                    <span class="logo-text">Portion<sup>Pal</sup></span>
                 </a>
-                <!-- Example Nav Links -->
                 <ul>
                     <li><a href="#calculator">Calculator</a></li>
                     <li><a href="#recipes">Recipes</a></li>
@@ -63,15 +62,28 @@
                                     <option value="chicken">Chicken</option>
                                     <option value="beef">Beef</option>
                                     <option value="fish">Fish</option>
+                                    <!-- Add more meat types if desired -->
                                 </select>
                             </div>
                         </div>
 
-                        <div class="input-group">
-                            <label for="meatWeight"><i class="fa-solid fa-weight-scale"></i> Weight (grams)</label>
-                            <input type="number" id="meatWeight" name="meatWeight" placeholder="e.g., 1500" min="1" required>
+                        <!-- Updated Weight Input Group -->
+                        <div class="input-group weight-input-group">
+                            <label for="meatWeight"><i class="fa-solid fa-weight-scale"></i> Weight</label>
+                            <div class="weight-input-container">
+                                <input type="number" id="meatWeight" name="meatWeight" placeholder="e.g., 500" min="0.1" step="any" required>
+                                <div class="select-wrapper unit-select-wrapper">
+                                    <select id="meatWeightUnit" name="meatWeightUnit" aria-label="Weight unit">
+                                        <option value="g" selected>g</option>
+                                        <option value="kg">kg</option>
+                                        <option value="lbs">lbs</option>
+                                    </select>
+                                </div>
+                            </div>
                             <span class="error-message" id="meatWeightError"></span>
                         </div>
+                        <!-- End Updated Weight Input Group -->
+
 
                         <div class="input-group">
                             <label for="portionSize"><i class="fa-solid fa-user-group"></i> Serving Size Goal</label>
@@ -130,13 +142,22 @@
         <div class="container footer-content">
             <div class="footer-logo">
                  <i class="fa-solid fa-utensils logo-icon"></i>
-                 <span class="logo-text">Tittle<sup>Pal</sup></span>
+                 <span class="logo-text">Portion<sup>Pal</sup></span>
             </div>
             <div class="footer-links">
-                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact Us</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <span class="footer-separator">|</span>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <span class="footer-separator">|</span>
+                <a href="#" class="footer-link">Contact Us</a>
+                <span class="footer-separator">|</span>
+                <a href="https://www.facebook.com/your-facebook-page-link-here" target="_blank" rel="noopener noreferrer" class="footer-link report-issue-link">
+                    <i class="fa-solid fa-bug"></i> Report Issue
+                </a>
+                <!-- IMPORTANT: Replace the href above with your actual Facebook link -->
             </div>
             <div class="footer-copyright">
-                © Ardel Oranza Demo
+                © PortionPal Demo
             </div>
         </div>
     </footer>
@@ -160,7 +181,7 @@
                          <div>
                              <h4><i class="fa-solid fa-list-check"></i> Ingredients</h4>
                              <ul class="modal-ingredients-list" id="modalIngredientsList">
-                                 <!-- Dynamically populated -->
+                                 <!-- Dynamically populated & scaled here -->
                              </ul>
                          </div>
                          <div>
@@ -175,7 +196,6 @@
         </div>
     </div>
 
-    <!-- Custom JavaScript -->
     <script src="script.js" defer></script>
 </body>
 </html>
