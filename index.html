@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test - Stop Hating Criminology Students‼️</title> <!-- More engaging title -->
+    <title>Tittle - Meal Planner</title> <!-- Updated title -->
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"> <!-- Added Playfair for headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -21,14 +21,14 @@
         <div class="container">
             <nav class="main-nav">
                 <a href="#" class="logo">
-                    <i class="fa-solid fa-drumstick-bite logo-icon"></i>
-                    <span class="logo-text">Title<sup>Pro</sup><sup></span>
+                    <i class="fa-solid fa-utensils logo-icon"></i> <!-- Changed Icon -->
+                    <span class="logo-text">Tittle<sup>Pal</sup></span> <!-- Updated Name -->
                 </a>
                 <!-- Example Nav Links -->
                 <ul>
                     <li><a href="#calculator">Calculator</a></li>
                     <li><a href="#recipes">Recipes</a></li>
-                    <li><a href="#">Tips & Tricks</a></li>
+                    <li><a href="#">Tips</a></li>
                     <li><a href="#">About</a></li>
                 </ul>
             </nav>
@@ -40,15 +40,14 @@
             <div class="hero-content">
                 <h1>Perfect Portions, Delicious Dinners</h1>
                 <p class="subtitle">Never guess meat quantities again. Get precise serving sizes and curated recipe ideas instantly.</p>
-                <a href="#calculator" class="cta-button">Get Started <i class="fa-solid fa-arrow-down"></i></a>
+                <a href="#calculator" class="cta-button">Plan Your Meal <i class="fa-solid fa-arrow-down"></i></a>
             </div>
         </div>
     </section>
 
     <main class="container main-content">
         <section id="calculator" class="calculator-section" aria-labelledby="calculator-heading">
-             <!-- Heading moved above the cards for better sectioning -->
-            <h2 class="section-heading" id="calculator-heading">Plan Your Meal</h2>
+            <h2 class="section-heading" id="calculator-heading">Calculate Servings</h2>
             <div class="calculator-container">
                 <div class="calculator-card card">
                     <h3 class="card-title">
@@ -58,13 +57,12 @@
                     <form id="meatForm" novalidate>
                         <div class="input-group">
                             <label for="meatType"><i class="fa-solid fa-tag"></i> Meat Type</label>
-                            <div class="select-wrapper"> <!-- Wrapper for custom arrow -->
+                            <div class="select-wrapper">
                                 <select id="meatType" name="meatType">
                                     <option value="pork">Pork</option>
                                     <option value="chicken">Chicken</option>
                                     <option value="beef">Beef</option>
                                     <option value="fish">Fish</option>
-                                    <option value="lamb">Lamb</option>
                                 </select>
                             </div>
                         </div>
@@ -94,15 +92,15 @@
                         </div>
 
                         <button type="submit" id="calculateBtn" class="button primary-button">
-                            <i class="fa-solid fa-calculator"></i> Calculate Portions
+                            <i class="fa-solid fa-calculator"></i> Calculate & Suggest Recipes
                         </button>
                     </form>
                 </div>
 
                 <div class="result-card card">
-                    <h3 class="result-title card-title"> <!-- Consistent heading level -->
+                    <h3 class="result-title card-title">
                         <span class="result-icon card-icon"><i class="fa-solid fa-clipboard-list"></i></span>
-                        2. Your Results
+                        2. Your Results & Tips
                     </h3>
                     <div class="results-wrapper" id="resultsWrapper" aria-live="polite">
                          <div class="placeholder-result" id="resultPlaceholder">
@@ -131,17 +129,51 @@
     <footer class="site-footer">
         <div class="container footer-content">
             <div class="footer-logo">
-                 <i class="fa-solid fa-drumstick-bite logo-icon"></i>
-                 <span class="logo-text">Title<sup>Pro</sup></span>
+                 <i class="fa-solid fa-utensils logo-icon"></i>
+                 <span class="logo-text">Portion<sup>Pal</sup></span>
             </div>
             <div class="footer-links">
                 <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact Us</a>
             </div>
             <div class="footer-copyright">
-                © test
+                © TittlePal Demo
             </div>
         </div>
     </footer>
+
+    <!-- Recipe Modal -->
+    <div class="recipe-modal" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="recipeModalTitle" aria-hidden="true">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close recipe details">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img id="modalRecipeImage" src="" alt="Recipe Image" loading="lazy">
+                </div>
+                <div class="modal-text-content">
+                    <h3 class="modal-title" id="recipeModalTitle">Recipe Name</h3>
+                    <p class="modal-description" id="modalRecipeDesc">Description goes here.</p>
+
+                    <div class="modal-details-grid">
+                         <div>
+                             <h4><i class="fa-solid fa-list-check"></i> Ingredients</h4>
+                             <ul class="modal-ingredients-list" id="modalIngredientsList">
+                                 <!-- Dynamically populated -->
+                             </ul>
+                         </div>
+                         <div>
+                             <h4><i class="fa-solid fa-shoe-prints"></i> Instructions</h4>
+                            <ol class="modal-instructions-list" id="modalInstructionsList">
+                                <!-- Dynamically populated -->
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Custom JavaScript -->
     <script src="script.js" defer></script>
